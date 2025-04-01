@@ -21,10 +21,12 @@
 #include <string>
 #include <unordered_map>
 
+using namespace std::literals;
+
 using std::make_unique;
 using std::unique_ptr;
 
 using std::wstring;
 using std::unordered_map;
 
-#endif // !__PCH_H__
+#endif // _PCH_H__

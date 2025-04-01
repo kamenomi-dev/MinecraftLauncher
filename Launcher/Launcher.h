@@ -6,11 +6,12 @@
 #define __LAUNCHER_H__
 
 namespace Launcher {
-class LauncherWindow : public Utils::WindowWrapper {
+class LauncherWindow : public Components::WindowWrapper {
   public:
     LauncherWindow(HINSTANCE);
 
     static bool WindowsMessageProcessor(HWND, UINT, WPARAM, LPARAM, LRESULT&);
+    void        OnCreate(bool);
     void        OnPaint(Gdiplus::Graphics&, bool);
 };
 } // namespace Launcher

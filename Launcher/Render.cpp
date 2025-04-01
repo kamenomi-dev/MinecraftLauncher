@@ -54,7 +54,7 @@ void SwapBuffer::Present() {
             blendFunc
         );*/
         UpdateLayeredWindow(
-            _hOriginWnd, _hOriginDC, &_posOriginWnd, &_szOriginWnd, _hVirtualDC, &srcPos, NULL, &blendFunc, ULW_ALPHA
+            _hOriginWnd, nullptr, &_posOriginWnd, &_szOriginWnd, _hVirtualDC, &srcPos, NULL, &blendFunc, ULW_ALPHA
         );
         return;
     }

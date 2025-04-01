@@ -49,9 +49,9 @@ bool WindowWrapper::Initialize() {
     };
 
     auto hWnd = CreateWindowExW(
-        WS_EX_APPWINDOW | (_initOptions.isLayered ? WS_EX_LAYERED : NULL), _wndClass.lpszClassName,
-        _initOptions.title.c_str(), WS_OVERLAPPEDWINDOW, _initOptions.position.x, _initOptions.position.y,
-        _initOptions.size.cx, _initOptions.size.cy, _initOptions.hParent, nullptr, _wndClass.hInstance, this
+        WS_EX_APPWINDOW, _wndClass.lpszClassName, _initOptions.title.c_str(), WS_OVERLAPPEDWINDOW,
+        _initOptions.position.x, _initOptions.position.y, _initOptions.size.cx, _initOptions.size.cy,
+        _initOptions.hParent, nullptr, _wndClass.hInstance, this
     );
 
     if (!hWnd) {
@@ -69,7 +69,7 @@ bool WindowWrapper::Initialize() {
 
     _bInit       = true;
     _hWnd        = hWnd;
-    _pSwapBuffer = new SwapBuffer(hWnd, _initOptions.isLayered);
+    _pSwapBuffer = new SwapBuffer(hWnd, false);
     return !!hWnd;
 }
 
@@ -151,27 +151,24 @@ LRESULT WindowWrapper::CommonWindowsMessageProcessor(
 
         if (wrapper) {
             windowWrapperMap[hWnd] = wrapper;
+            // Handle has already existed, but CreateWindowEx hasn't returned it.
+            wrapper->_hWnd = hWnd;
             wrapper->OnCreate(true);
         }
     }
 
     if (uMsg == WM_CREATE) {
         pWrapper->OnCreate(false);
-
-        /*if (pWrapper) {
-            pWrapper->OnCreate(false);
-        } else {
-            const auto createStruct = *(CREATESTRUCTW*)lParam;
-            const auto wrapper      = (WindowWrapper*)createStruct.lpCreateParams;
-
-            if (wrapper) {
-                windowWrapperMap[hWnd] = wrapper;
-            }
-        }*/
     }
 
     if (pWrapper && uMsg == WM_SIZE) {
         pWrapper->_pSwapBuffer->UpdateSize(lParam);
+
+        #if _DEBUG
+        OutputDebugStringA(
+            (std::to_string(GetTickCount64()) + (" - [MainWindow] WM_SIZE was toggled. \r\n"s)).c_str()
+        );
+#endif;
     }
 
     if (pWrapper && uMsg == WM_MOVE) {
@@ -185,6 +182,10 @@ LRESULT WindowWrapper::CommonWindowsMessageProcessor(
         pWrapper->OnPaint(graphics, uMsg == WM_NCPAINT);
 
         swapBuffer->Present();
+
+        #if _DEBUG
+        OutputDebugStringA((std::to_string(GetTickCount64()) + (" - [MainWindow] WM_(NC)PAINT was toggled. \r\n"s)).c_str());
+        #endif;
     }
 
     if (uMsg == WM_CLOSE) {

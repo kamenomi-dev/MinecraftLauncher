@@ -71,7 +71,7 @@ class WindowWrapper {
 /// Todo，必须Todo，总该不能俩个窗口处理合并在一起啊？
 /// </summary>
 /// <seealso cref="WindowWrapper" />
-class VisualWrapper : WindowWrapper {}
+class VisualWrapper : WindowWrapper {};
 } // namespace Components
 } // namespace Launcher
 

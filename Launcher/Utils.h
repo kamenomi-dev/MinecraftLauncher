@@ -27,71 +27,21 @@ struct VersionStruct {
 VersionStruct GetCorrectVersion();
 } // namespace System
 
-class WindowWrapper {
+namespace Window {
 
-  public:
-    enum BlurTypes : UCHAR {
-        Auto = 0,
-        Aero,
-        Acrylic,
-        Mica
-    };
-
-    struct WindowInitOptions {
-        bool isLayered;
-
-        wstring title;
-        SIZE    size;
-        POINT   position;
-    };
-
-    typedef bool(__stdcall* WndProc)(HWND, UINT, WPARAM, LPARAM, LRESULT&);
-
-    friend class LauncherWindow;
-
-  public:
-    WindowWrapper(HINSTANCE hInstance, wstring classText, wstring titleText, WndProc pfnWndProc);
-    ~WindowWrapper();
-
-    bool Initialize();
-    void Run(int showType);
-
-    void  SetSize(SIZE);
-    SIZE  GetSize() const;
-    void  SetPosition(POINT);
-    POINT GetPosition() const;
-
-    static LRESULT CommonWindowsMessageProcessor(HWND, UINT, WPARAM, LPARAM);
-    static int     MessageLoop();
-
-    virtual void OnCreate(bool bNonClient) {};
-    virtual bool OnClose() { return true; };
-    virtual void OnPaint(Gdiplus::Graphics&, bool bNonClient) {};
-    virtual void OnExit() {};
-
-    bool EnableLayeredStyle(bool bToggle);
-    // It adapts to the platform without manually setting its blur style.
-    bool EnableBackgroundBlur(bool bToggle);
-    bool EnableBackgroundBlur(bool bToggle, BlurTypes);
-
-    HWND GetHWND() const { return _hWnd; };
-
-    __declspec(property(get = GetHWND)) HWND hWindow;
-
-  private:
-    void _WindowExit();
-
-  private:
-    bool              _bInit{false};
-    WindowInitOptions _initOptions{};
-
-    ULONG_PTR  _uGdipToken{};
-    HWND       _hWnd{NULL};
-    WndProc    _wndProc{nullptr};
-    WNDCLASSEX _wndClass{sizeof(WNDCLASSEX), NULL};
-
-    SwapBuffer* _pSwapBuffer{nullptr};
+enum BlurTypes {
+    None,
+    Auto,
+    Aero,
+    Acrylic,
+    Mica
 };
+
+bool EnableLayeredStyle(HWND, bool);
+// It adapts to the platform without manually setting its blur style.
+bool EnableBackgroundBlur(HWND, bool bToggle);
+bool EnableBackgroundBlur(HWND, bool, BlurTypes);
+} // namespace Window
 
 } // namespace Utils
 } // namespace Launcher

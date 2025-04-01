@@ -1,6 +1,9 @@
 ﻿#include "pch.h"
 #include "Utils.h"
 #include "Render.h"
+
+#include "./Components/Window.h"
+
 #include "Launcher.h"
 
 using namespace Launcher;
@@ -15,14 +18,26 @@ int APIENTRY wWinMain(
     return LauncherWindow::MessageLoop();
 }
 
-LauncherWindow::LauncherWindow(HINSTANCE hInstance)
-: WindowWrapper(hInstance, LAUNCHER_WINDOW_CLASS, L"MinecraftLauncher", LauncherWindow::WindowsMessageProcessor) {};
+LauncherWindow::LauncherWindow(
+    HINSTANCE hInstance
+)
+: WindowWrapper(hInstance, LAUNCHER_WINDOW_CLASS, L"MinecraftLauncher", LauncherWindow::WindowsMessageProcessor) {
+    this->SetSize({800, 600});
+};
 
 bool LauncherWindow::WindowsMessageProcessor(
     HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& result
 ) {
     result = NULL;
     return false;
+}
+
+void Launcher::LauncherWindow::OnCreate(
+    bool b
+) {
+    if (b) return;
+
+    Utils::Window::EnableBackgroundBlur(hWindow, true);
 }
 
 void LauncherWindow::OnPaint(
@@ -32,5 +47,5 @@ void LauncherWindow::OnPaint(
         return;
     }
 
-    grap.Clear(Gdiplus::Color::PaleVioletRed);
+    grap.Clear(Gdiplus::Color(100, 123, 23, 20));
 }
