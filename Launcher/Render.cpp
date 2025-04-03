@@ -40,25 +40,31 @@ SwapBuffer::~SwapBuffer() {
     _hLastVirtualBitmap = nullptr;
 }
 
-void SwapBuffer::Present() {
-    if (_bLayered) {
-        POINT         srcPos{0, 0};
-        BLENDFUNCTION blendFunc{};
-        blendFunc.AlphaFormat         = AC_SRC_ALPHA;
-        blendFunc.BlendFlags          = 0;
-        blendFunc.BlendOp             = AC_SRC_OVER;
-        blendFunc.SourceConstantAlpha = 255;
+void SwapBuffer::Present() const {
+    //if (_bLayered) {
+    //    POINT         srcPos{0, 0};
+    //    BLENDFUNCTION blendFunc{};
+    //    blendFunc.AlphaFormat         = AC_SRC_ALPHA;
+    //    blendFunc.BlendFlags          = 0;
+    //    blendFunc.BlendOp             = AC_SRC_OVER;
+    //    blendFunc.SourceConstantAlpha = 255;
 
-        /*AlphaBlend(
-            _hOriginDC, 0, 0, _szOriginWnd.cx, _szOriginWnd.cy, _hVirtualDC, 0, 0, _szOriginWnd.cx, _szOriginWnd.cy,
-            blendFunc
-        );*/
-        UpdateLayeredWindow(
-            _hOriginWnd, nullptr, &_posOriginWnd, &_szOriginWnd, _hVirtualDC, &srcPos, NULL, &blendFunc, ULW_ALPHA
-        );
-        return;
-    }
+    //    /*AlphaBlend(
+    //        _hOriginDC, 0, 0, _szOriginWnd.cx, _szOriginWnd.cy, _hVirtualDC, 0, 0, _szOriginWnd.cx, _szOriginWnd.cy,
+    //        blendFunc
+    //    );*/
+    //    UpdateLayeredWindow(
+    //        _hOriginWnd, nullptr, &_posOriginWnd, &_szOriginWnd, _hVirtualDC, &srcPos, NULL, &blendFunc, ULW_ALPHA
+    //    );
+    //    return;
+    //}
     BitBlt(_hOriginDC, 0, 0, _szOriginWnd.cx, _szOriginWnd.cy, _hVirtualDC, 0, 0, SRCCOPY);
+}
+
+void SwapBuffer::Present(
+    HDC hDC
+) const {
+    BitBlt(hDC, 0, 0, _szOriginWnd.cx, _szOriginWnd.cy, _hVirtualDC, 0, 0, SRCCOPY);
 }
 
 void SwapBuffer::UpdateSize(

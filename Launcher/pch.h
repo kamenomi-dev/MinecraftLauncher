@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef __PCH_H__
-#define __PCH_H__
+#ifndef PCH_H
+#define PCH_H
 
 // Unicode support.
 #ifndef _UNICODE
@@ -26,7 +26,7 @@ using namespace std::literals;
 using std::make_unique;
 using std::unique_ptr;
 
-using std::wstring;
 using std::unordered_map;
+using std::wstring;
 
-#endif // _PCH_H__
+#endif // PCH_H

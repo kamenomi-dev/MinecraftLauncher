@@ -28,6 +28,11 @@ LauncherWindow::LauncherWindow(
 bool LauncherWindow::WindowsMessageProcessor(
     HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& result
 ) {
+
+  if (uMsg == WM_NCCALCSIZE) {
+        return true;  
+  }
+
     result = NULL;
     return false;
 }
@@ -44,8 +49,8 @@ void LauncherWindow::OnPaint(
     Gdiplus::Graphics& grap, bool isNonClient
 ) {
     if (isNonClient) {
-        return;
+        // return;
     }
 
-    grap.Clear(Gdiplus::Color(100, 123, 23, 20));
+    grap.Clear(Gdiplus::Color(255, rand() % 255, 23, 20));
 }

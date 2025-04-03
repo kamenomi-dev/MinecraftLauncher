@@ -1,6 +1,7 @@
-#include "../pch.h"
-#include "../Render.h"
-#include "./Window.h"
+#include "pch.h"
+#include "Render.h"
+#include "ComponentContainer.h"
+#include "Window.h"
 
 using namespace Launcher::Components;
 
@@ -8,6 +9,7 @@ WindowWrapper::WindowWrapper(
     HINSTANCE hInstance, wstring classText, wstring titleText, WndProc pfnWndProc
 ) {
     _wndClass.hInstance     = hInstance;
+    _wndClass.style         = CS_HREDRAW | CS_VREDRAW;
     _wndClass.lpfnWndProc   = &WindowWrapper::CommonWindowsMessageProcessor;
     _wndClass.lpszClassName = classText.c_str();
 
@@ -163,12 +165,6 @@ LRESULT WindowWrapper::CommonWindowsMessageProcessor(
 
     if (pWrapper && uMsg == WM_SIZE) {
         pWrapper->_pSwapBuffer->UpdateSize(lParam);
-
-        #if _DEBUG
-        OutputDebugStringA(
-            (std::to_string(GetTickCount64()) + (" - [MainWindow] WM_SIZE was toggled. \r\n"s)).c_str()
-        );
-#endif;
     }
 
     if (pWrapper && uMsg == WM_MOVE) {
@@ -176,16 +172,18 @@ LRESULT WindowWrapper::CommonWindowsMessageProcessor(
     }
 
     if (pWrapper && (uMsg == WM_PAINT || uMsg == WM_NCPAINT)) {
-        const auto        swapBuffer = pWrapper->_pSwapBuffer;
+        const auto  swapBuffer = pWrapper->_pSwapBuffer;
+        PAINTSTRUCT paintStruct{};
+        BeginPaint(pWrapper->hWindow, &paintStruct);
         Gdiplus::Graphics graphics{swapBuffer->GetGraphicsDC()};
 
         pWrapper->OnPaint(graphics, uMsg == WM_NCPAINT);
 
         swapBuffer->Present();
+    }
 
-        #if _DEBUG
-        OutputDebugStringA((std::to_string(GetTickCount64()) + (" - [MainWindow] WM_(NC)PAINT was toggled. \r\n"s)).c_str());
-        #endif;
+    if (uMsg == WM_ERASEBKGND) {
+        return NULL;
     }
 
     if (uMsg == WM_CLOSE) {

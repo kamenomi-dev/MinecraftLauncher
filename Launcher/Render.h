@@ -8,7 +8,8 @@ class SwapBuffer {
     SwapBuffer(HWND hWnd, bool bLayered = false);
     ~SwapBuffer();
 
-    void Present();
+    void Present() const;
+    void Present(HDC) const;
 
     void UpdateSize(LPARAM);
     void UpdatePosition(LPARAM);
