@@ -3,6 +3,11 @@
 
 using namespace Launcher::Components;
 
+Base::~Base() {
+    if (_nodeComp.next) delete _nodeComp.next;
+    if (_nodeComp.childFirst) delete _nodeComp.childFirst;
+}
+
 void Base::SetID(
     const wstring id
 ) {
@@ -79,3 +84,14 @@ bool Base::IsLastComponent() const {
     return _bLast;
 }
 
+Base* Launcher::Components::base(
+    const wstring ID, SIZE size, POINT position
+) {
+    const auto ptr = new Base;
+    ptr->SetID(ID);
+    ptr->SetType(L"Comp.Base");
+    ptr->SetSize(size);
+    ptr->SetPosition(position);
+
+    return ptr;
+}

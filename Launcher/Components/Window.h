@@ -3,10 +3,14 @@
 #ifndef _Component_Window_Header_
 #define _Component_Window_Header_
 
+#include "Render.h"
+#include "Button.h"
+#include "ComponentContainer.h"
+
 namespace Launcher {
 namespace Components {
 
-class WindowWrapper {
+class WindowWrapper : public ComponentContainer {
 
   public:
     typedef bool(__stdcall* WndProc)(HWND, UINT, WPARAM, LPARAM, LRESULT&);

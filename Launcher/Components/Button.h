@@ -3,23 +3,15 @@
 #ifndef _Component_Button_Header_
 #define _Component_Button_Header_
 
+#include "Base.h"
+
 namespace Launcher {
 namespace Components {
 class Button : public Base {
 
 };
 
-Button* button(
-    wstring ID, SIZE size, POINT position, wstring content
-) {
-    const auto ptr = new Button;
-    ptr->SetID(ID);
-    ptr->SetType(L"Comp.BUtton");
-    ptr->SetSize(size);
-    ptr->SetPosition(position);
-
-    return ptr;
-}
+Button* button(wstring ID, SIZE size, POINT position, wstring content);
 
 } // namespace Components
 } // namespace Launcher

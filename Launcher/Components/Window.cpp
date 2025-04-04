@@ -1,6 +1,4 @@
 #include "pch.h"
-#include "Render.h"
-#include "ComponentContainer.h"
 #include "Window.h"
 
 using namespace Launcher::Components;
@@ -15,6 +13,8 @@ WindowWrapper::WindowWrapper(
 
     _wndProc           = pfnWndProc;
     _initOptions.title = titleText;
+
+    Push({Components::button(L"test.button", {200, 100}, {200, 200}, L"Hello")});
 }
 
 WindowWrapper::~WindowWrapper() {

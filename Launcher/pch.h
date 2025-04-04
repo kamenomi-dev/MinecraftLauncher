@@ -20,12 +20,14 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <initializer_list>
 
 using namespace std::literals;
 
 using std::make_unique;
 using std::unique_ptr;
 
+using std::initializer_list;
 using std::unordered_map;
 using std::wstring;
 
