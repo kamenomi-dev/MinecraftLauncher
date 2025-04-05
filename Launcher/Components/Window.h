@@ -19,7 +19,8 @@ class WindowWrapper : public ComponentContainer {
         bool isLayered;
 
         HWND    hParent;
-        wstring title;
+        wstring titleText;
+        wstring classText;
         SIZE    size;
         POINT   position;
     };
@@ -46,7 +47,7 @@ class WindowWrapper : public ComponentContainer {
 
     virtual void OnCreate(bool bNonClient) {};
     virtual bool OnClose() { return true; };
-    virtual void OnPaint(Gdiplus::Graphics&, bool bNonClient) {};
+    virtual void OnPaint(Gdiplus::Graphics&) {};
     virtual void OnExit() {};
 
     HWND GetHWND() const { return _hWnd; };

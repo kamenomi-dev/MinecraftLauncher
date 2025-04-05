@@ -8,10 +8,19 @@
 namespace Launcher {
 namespace Components {
 class Button : public Base {
+  public:
+    void OnPaint(Gdiplus::Graphics&);
 
+    wstring GetContent();
+    void    SetContent(const wstring&);
+
+    __declspec(property(get = GetContent, put = SetContent)) wstring Content;
+
+  private:
+    wstring _btnContent{};
 };
 
-Button* button(wstring ID, SIZE size, POINT position, wstring content);
+Button* button(wstring ID, SIZE size, POINT position, const wstring& content = L"Button");
 
 } // namespace Components
 } // namespace Launcher

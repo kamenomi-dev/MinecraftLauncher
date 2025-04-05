@@ -8,6 +8,10 @@ Base::~Base() {
     if (_nodeComp.childFirst) delete _nodeComp.childFirst;
 }
 
+void Base::Invalidate() {
+    // Todo
+};
+
 void Base::SetID(
     const wstring id
 ) {

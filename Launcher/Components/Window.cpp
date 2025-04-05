@@ -9,12 +9,10 @@ WindowWrapper::WindowWrapper(
     _wndClass.hInstance     = hInstance;
     _wndClass.style         = CS_HREDRAW | CS_VREDRAW;
     _wndClass.lpfnWndProc   = &WindowWrapper::CommonWindowsMessageProcessor;
-    _wndClass.lpszClassName = classText.c_str();
 
     _wndProc           = pfnWndProc;
-    _initOptions.title = titleText;
-
-    Push({Components::button(L"test.button", {200, 100}, {200, 200}, L"Hello")});
+    _initOptions.titleText = titleText;
+    _initOptions.classText = classText;
 }
 
 WindowWrapper::~WindowWrapper() {
@@ -42,6 +40,8 @@ bool WindowWrapper::Initialize() {
         return false;
     }
 
+    _wndClass.lpszClassName = _initOptions.classText.c_str();
+
     if (!RegisterClassEx(&_wndClass)) {
         /*  Gdiplus::GdiplusShutdown(_uGdipToken);
 
@@ -51,12 +51,14 @@ bool WindowWrapper::Initialize() {
     };
 
     auto hWnd = CreateWindowExW(
-        WS_EX_APPWINDOW, _wndClass.lpszClassName, _initOptions.title.c_str(), WS_OVERLAPPEDWINDOW,
+        WS_EX_APPWINDOW, _wndClass.lpszClassName, _initOptions.titleText.c_str(), WS_OVERLAPPEDWINDOW,
         _initOptions.position.x, _initOptions.position.y, _initOptions.size.cx, _initOptions.size.cy,
         _initOptions.hParent, nullptr, _wndClass.hInstance, this
     );
 
     if (!hWnd) {
+        auto lastError = GetLastError();
+
         UnregisterClass(_wndClass.lpszClassName, _wndClass.hInstance);
         Gdiplus::GdiplusShutdown(_uGdipToken);
 
@@ -171,13 +173,27 @@ LRESULT WindowWrapper::CommonWindowsMessageProcessor(
         pWrapper->_pSwapBuffer->UpdatePosition(lParam);
     }
 
-    if (pWrapper && (uMsg == WM_PAINT || uMsg == WM_NCPAINT)) {
+    if (pWrapper && uMsg == WM_PAINT) {
         const auto  swapBuffer = pWrapper->_pSwapBuffer;
-        PAINTSTRUCT paintStruct{};
-        BeginPaint(pWrapper->hWindow, &paintStruct);
         Gdiplus::Graphics graphics{swapBuffer->GetGraphicsDC()};
 
-        pWrapper->OnPaint(graphics, uMsg == WM_NCPAINT);
+        auto& root = pWrapper;
+        root->ForEach<Gdiplus::Graphics>(
+            [](Base* comp, void* ptr) -> void {
+                auto& graphics = *(Gdiplus::Graphics*)(ptr);
+                auto lastStatus = graphics.Save();
+
+                graphics.TranslateTransform(comp->GetPosition().x, comp->GetPosition().y);
+                graphics.SetClip(Gdiplus::Rect(0, 0, comp->GetSize().cx, comp->GetSize().cy));
+
+                comp->OnPaint(graphics);
+
+                graphics.Restore(lastStatus);
+            },
+            graphics
+        );
+
+        pWrapper->OnPaint(graphics);
 
         swapBuffer->Present();
     }

@@ -12,6 +12,8 @@ int APIENTRY wWinMain(
     _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow
 ) {
     LauncherWindow main{hInstance};
+    main.Push({Components::button(L"test.button", {200, 100}, {200, 200}, L"Hello")});
+
     main.Initialize();
     main.Run(nCmdShow);
 
@@ -29,20 +31,20 @@ bool LauncherWindow::WindowsMessageProcessor(
     HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& result
 ) {
 
-  if (uMsg == WM_NCCALCSIZE) {
-        return true;  
-  }
+    if (uMsg == WM_NCCALCSIZE) {
+        // return true;
+    }
 
     result = NULL;
     return false;
 }
 
-void Launcher::LauncherWindow::OnCreate(
+void LauncherWindow::OnCreate(
     bool b
 ) {
     if (b) return;
 
-    Utils::Window::EnableBackgroundBlur(hWindow, true);
+    // Utils::Window::EnableBackgroundBlur(hWindow, true);
 }
 
 void LauncherWindow::OnPaint(
@@ -52,5 +54,5 @@ void LauncherWindow::OnPaint(
         // return;
     }
 
-    grap.Clear(Gdiplus::Color(255, rand() % 255, 23, 20));
+    // grap.Clear(Gdiplus::Color(255, rand() % 255, 23, 20));
 }

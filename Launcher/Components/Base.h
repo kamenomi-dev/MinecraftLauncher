@@ -202,10 +202,10 @@ class Base {
     bool _bInited{false};
 
     ComponentNodeStruct _nodeComp{};
-    wstring             _idComp{};
-    wstring             _tyComp{};
-    SIZE                _szComp{};
-    POINT               _posComp{};
+    wstring             _idComp{L""};
+    wstring             _tyComp{L"Comp.Unknown"};
+    SIZE                _szComp{0};
+    POINT               _posComp{0};
 };
 
 Base* base(const wstring ID, SIZE size, POINT position);
