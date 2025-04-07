@@ -6,11 +6,11 @@ using namespace Launcher::Components;
 WindowWrapper::WindowWrapper(
     HINSTANCE hInstance, wstring classText, wstring titleText, WndProc pfnWndProc
 ) {
-    _wndClass.hInstance     = hInstance;
-    _wndClass.style         = CS_HREDRAW | CS_VREDRAW;
-    _wndClass.lpfnWndProc   = &WindowWrapper::CommonWindowsMessageProcessor;
+    _wndClass.hInstance   = hInstance;
+    _wndClass.style       = CS_HREDRAW | CS_VREDRAW;
+    _wndClass.lpfnWndProc = &WindowWrapper::CommonWindowsMessageProcessor;
 
-    _wndProc           = pfnWndProc;
+    _wndProc               = pfnWndProc;
     _initOptions.titleText = titleText;
     _initOptions.classText = classText;
 }
@@ -174,11 +174,22 @@ LRESULT WindowWrapper::CommonWindowsMessageProcessor(
     }
 
     if (pWrapper && uMsg == WM_PAINT) {
-        const auto  swapBuffer = pWrapper->_pSwapBuffer;
+        PAINTSTRUCT paintStruct{};
+        BeginPaint(hWnd, &paintStruct);
+
+        const auto invalidatedRect = Gdiplus::Rect(
+            paintStruct.rcPaint.left, paintStruct.rcPaint.top, paintStruct.rcPaint.right - paintStruct.rcPaint.left,
+            paintStruct.rcPaint.bottom - paintStruct.rcPaint.top
+        );
+
+        const auto        swapBuffer = pWrapper->_pSwapBuffer;
         Gdiplus::Graphics graphics{swapBuffer->GetGraphicsDC()};
 
-        auto& root = pWrapper;
-        root->ForEach<Gdiplus::Graphics>(
+        auto& root = *pWrapper;
+        root.OnPaint(graphics);
+        root.CallAllComponentRenderer(graphics, invalidatedRect);
+
+        /*root->ForEach<Gdiplus::Graphics>(
             [](Base* comp, void* ptr) -> void {
                 auto& graphics = *(Gdiplus::Graphics*)(ptr);
                 auto lastStatus = graphics.Save();
@@ -191,11 +202,10 @@ LRESULT WindowWrapper::CommonWindowsMessageProcessor(
                 graphics.Restore(lastStatus);
             },
             graphics
-        );
-
-        pWrapper->OnPaint(graphics);
+        );*/
 
         swapBuffer->Present();
+        EndPaint(hWnd, &paintStruct);
     }
 
     if (uMsg == WM_ERASEBKGND) {

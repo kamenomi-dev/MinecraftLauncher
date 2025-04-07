@@ -62,6 +62,16 @@ POINT Base::GetPosition() const {
     return _posComp;
 }
 
+void Base::SetVisible(
+    const bool status
+) {
+    _bVisible = status;
+}
+
+bool Base::GetVisible() const {
+    return _bVisible;
+}
+
 void Base::TagComponentFirst() {
     if (_bInited) {
         OutputDebugStringA("Component.Base's \"bFirst\" tag couldn't be set after having inited.");

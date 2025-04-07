@@ -40,6 +40,8 @@ class ComponentContainer {
             }
         }
     }
+
+    void              CallAllComponentRenderer(Gdiplus::Graphics&, Gdiplus::Rect = {});
     unique_ptr<Base>& GetContainer();
 
   private:

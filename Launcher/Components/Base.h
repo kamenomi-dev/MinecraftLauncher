@@ -41,6 +41,9 @@ class Base {
     SIZE    GetSize() const;
     void    SetPosition(const POINT);
     POINT   GetPosition() const;
+    
+    void    SetVisible(const bool);
+    bool    GetVisible() const;
 
     void TagComponentFirst();
     bool IsFristComponent() const;
@@ -52,6 +55,7 @@ class Base {
     __declspec(property(get = GetSize, put = SetSize)) SIZE          ComponentSize;
     __declspec(property(get = GetPosition, put = SetPosition)) POINT ComponentPosition;
 
+    __declspec(property(get = GetVisible, put = SetVisible)) bool Visible;
     // Node Operation
     LastNodeStatusStruct Detach() {
         if (_nodeComp.parent && _nodeComp.parent->_nodeComp.childFirst == this) {
@@ -200,6 +204,7 @@ class Base {
     bool _bFirst{false};
     bool _bLast{false};
     bool _bInited{false};
+    bool _bVisible{true};
 
     ComponentNodeStruct _nodeComp{};
     wstring             _idComp{L""};
