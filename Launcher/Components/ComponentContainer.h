@@ -41,6 +41,8 @@ class ComponentContainer {
         }
     }
 
+    Base * HitTest(LPARAM);
+
     void              CallAllComponentRenderer(Gdiplus::Graphics&, Gdiplus::Rect = {});
     unique_ptr<Base>& GetContainer();
 

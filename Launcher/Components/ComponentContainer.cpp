@@ -17,13 +17,43 @@ void ComponentContainer::Push(
     }
 }
 
+static Base* TryHitTest(
+    Base* currVisibleComp, Point targetPoint
+) {
+    auto currComp = currVisibleComp;
+    while (currComp) {
+        if (not currComp->Visible || currComp->Disabled) {
+            currComp = currComp->GetNext();
+            continue;
+        }
+
+        auto finalComp = TryHitTest(currComp->GetChildFirst(), targetPoint);
+        if (Rect(currComp->GetPosition().x, currComp->GetPosition().y, currComp->GetSize().cx, currComp->GetSize().cy)
+                .Contains(targetPoint)) {
+            return finalComp == nullptr ? currComp : finalComp;
+        }
+
+        return finalComp;
+
+        currComp = currComp->GetNext();
+    }
+
+    return nullptr;
+}
+
+Base* ComponentContainer::HitTest(
+    LPARAM combinedPoint
+) {
+    return TryHitTest(GetContainer().get(), {GET_X_LPARAM(combinedPoint), GET_Y_LPARAM(combinedPoint)});
+}
+
 static void CallRenderer(
     Base* currLayerComp, Graphics& graphics, Rect invalidatedRect
 ) {
     auto currComp = currLayerComp;
     while (currComp) {
         if (not currComp->Visible) {
-            currComp = currComp++;
+            currComp = currComp->GetNext();
             continue;
         }
 

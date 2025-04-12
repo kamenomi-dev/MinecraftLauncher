@@ -72,6 +72,16 @@ bool Base::GetVisible() const {
     return _bVisible;
 }
 
+void Base::SetDisabled(
+    const bool status
+) {
+    _bDisabled = status;
+}
+
+bool Base::GetDisabled() const {
+    return _bDisabled;
+}
+
 void Base::TagComponentFirst() {
     if (_bInited) {
         OutputDebugStringA("Component.Base's \"bFirst\" tag couldn't be set after having inited.");

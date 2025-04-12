@@ -212,6 +212,11 @@ LRESULT WindowWrapper::CommonWindowsMessageProcessor(
         return NULL;
     }
 
+    if (uMsg == WM_MOUSEMOVE) {
+        auto a = pWrapper->HitTest(lParam);
+        cos(1);
+    }
+
     if (uMsg == WM_CLOSE) {
         if (pWrapper) {
             if (pWrapper->OnClose()) {

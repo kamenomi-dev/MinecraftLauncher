@@ -48,11 +48,7 @@ void LauncherWindow::OnCreate(
 }
 
 void LauncherWindow::OnPaint(
-    Gdiplus::Graphics& grap, bool isNonClient
+    Gdiplus::Graphics& grap
 ) {
-    if (isNonClient) {
-        // return;
-    }
-
-    // grap.Clear(Gdiplus::Color(255, rand() % 255, 23, 20));
+    grap.Clear(Gdiplus::Color(255, rand() % 255, 23, 20));
 }

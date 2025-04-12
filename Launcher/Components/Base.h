@@ -42,8 +42,11 @@ class Base {
     void    SetPosition(const POINT);
     POINT   GetPosition() const;
     
+   
     void    SetVisible(const bool);
     bool    GetVisible() const;
+    void    SetDisabled(const bool);
+    bool    GetDisabled() const;
 
     void TagComponentFirst();
     bool IsFristComponent() const;
@@ -56,6 +59,7 @@ class Base {
     __declspec(property(get = GetPosition, put = SetPosition)) POINT ComponentPosition;
 
     __declspec(property(get = GetVisible, put = SetVisible)) bool Visible;
+    __declspec(property(get = GetDisabled, put = SetDisabled)) bool Disabled;
     // Node Operation
     LastNodeStatusStruct Detach() {
         if (_nodeComp.parent && _nodeComp.parent->_nodeComp.childFirst == this) {
@@ -205,6 +209,7 @@ class Base {
     bool _bLast{false};
     bool _bInited{false};
     bool _bVisible{true};
+    bool _bDisabled{false};
 
     ComponentNodeStruct _nodeComp{};
     wstring             _idComp{L""};
