@@ -113,7 +113,6 @@ Base* Launcher::Components::base(
 ) {
     const auto ptr = new Base;
     ptr->SetID(ID);
-    ptr->SetType(L"Comp.Base");
     ptr->SetSize(size);
     ptr->SetPosition(position);
 

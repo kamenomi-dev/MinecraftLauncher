@@ -9,6 +9,8 @@ namespace Launcher {
 namespace Components {
 class Button : public Base {
   public:
+    Button() : Base() { SetType(L"Comp.Button"); };
+
     void OnPaint(Gdiplus::Graphics&);
 
     wstring GetContent();

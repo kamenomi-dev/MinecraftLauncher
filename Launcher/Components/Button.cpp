@@ -37,7 +37,6 @@ Button* Launcher::Components::button(
 ) {
     const auto ptr = new Button;
     ptr->SetID(ID);
-    ptr->SetType(L"Comp.Button");
     ptr->SetSize(size);
     ptr->SetPosition(position);
 

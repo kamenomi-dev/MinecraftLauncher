@@ -143,18 +143,31 @@ POINT WindowWrapper::GetPosition() const {
     return _initOptions.position;
 }
 
+struct MessageProcessorEnvironmentInformation {
+    WindowWrapper* pWindowWrapper;
+    Base*          pCurrHoveredComp;
+    Base*          pPrevHoveredComp;
+
+    MessageProcessorEnvironmentInformation() {
+        pWindowWrapper   = nullptr;
+        pCurrHoveredComp = nullptr;
+        pPrevHoveredComp = nullptr;
+    }
+};
+
 LRESULT WindowWrapper::CommonWindowsMessageProcessor(
     HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 ) {
-    static unordered_map<HWND, WindowWrapper*> windowWrapperMap{};
-    auto&                                      pWrapper = windowWrapperMap[hWnd];
+    static unordered_map<HWND, MessageProcessorEnvironmentInformation> envInfoMap{};
+    auto&                                                              envInfo  = envInfoMap[hWnd];
+    auto&                                                              pWrapper = envInfo.pWindowWrapper;
 
     if (uMsg == WM_NCCREATE) {
         const auto createStruct = *(CREATESTRUCTW*)lParam;
         const auto wrapper      = (WindowWrapper*)createStruct.lpCreateParams;
 
         if (wrapper) {
-            windowWrapperMap[hWnd] = wrapper;
+            envInfoMap[hWnd].pWindowWrapper = wrapper;
             // Handle has already existed, but CreateWindowEx hasn't returned it.
             wrapper->_hWnd = hWnd;
             wrapper->OnCreate(true);
@@ -166,6 +179,7 @@ LRESULT WindowWrapper::CommonWindowsMessageProcessor(
     }
 
     if (pWrapper && uMsg == WM_SIZE) {
+        pWrapper->GetContainer()->SetSize({GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)});
         pWrapper->_pSwapBuffer->UpdateSize(lParam);
     }
 
@@ -185,24 +199,13 @@ LRESULT WindowWrapper::CommonWindowsMessageProcessor(
         const auto        swapBuffer = pWrapper->_pSwapBuffer;
         Gdiplus::Graphics graphics{swapBuffer->GetGraphicsDC()};
 
+        graphics.SetClip(invalidatedRect);
+
         auto& root = *pWrapper;
         root.OnPaint(graphics);
         root.CallAllComponentRenderer(graphics, invalidatedRect);
 
-        /*root->ForEach<Gdiplus::Graphics>(
-            [](Base* comp, void* ptr) -> void {
-                auto& graphics = *(Gdiplus::Graphics*)(ptr);
-                auto lastStatus = graphics.Save();
-
-                graphics.TranslateTransform(comp->GetPosition().x, comp->GetPosition().y);
-                graphics.SetClip(Gdiplus::Rect(0, 0, comp->GetSize().cx, comp->GetSize().cy));
-
-                comp->OnPaint(graphics);
-
-                graphics.Restore(lastStatus);
-            },
-            graphics
-        );*/
+        graphics.ResetClip();
 
         swapBuffer->Present();
         EndPaint(hWnd, &paintStruct);
@@ -213,21 +216,29 @@ LRESULT WindowWrapper::CommonWindowsMessageProcessor(
     }
 
     if (uMsg == WM_MOUSEMOVE) {
-        auto a = pWrapper->HitTest(lParam);
+        auto currComp = pWrapper->HitTest(lParam);
+        if (currComp == envInfo.pCurrHoveredComp) {
+            return NULL;
+        }
+
+        envInfo.pPrevHoveredComp = envInfo.pCurrHoveredComp;
+        envInfo.pCurrHoveredComp = currComp;
         cos(1);
+
+        return NULL;
     }
 
     if (uMsg == WM_CLOSE) {
         if (pWrapper) {
             if (pWrapper->OnClose()) {
                 pWrapper->_WindowExit();
-                windowWrapperMap.erase(hWnd);
+                envInfoMap.erase(hWnd);
             } else {
                 return 0;
             }
         }
 
-        if (windowWrapperMap.empty()) {
+        if (envInfoMap.empty()) {
             PostQuitMessage(NULL);
         }
     }

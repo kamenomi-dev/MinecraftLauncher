@@ -4,6 +4,7 @@
 #define _Component_ComponentContainer_h_
 
 #include "Base.h"
+#include "Frame.h"
 
 namespace Launcher {
 namespace Components {
@@ -41,13 +42,13 @@ class ComponentContainer {
         }
     }
 
-    Base * HitTest(LPARAM);
+    Base* HitTest(LPARAM);
 
-    void              CallAllComponentRenderer(Gdiplus::Graphics&, Gdiplus::Rect = {});
-    unique_ptr<Base>& GetContainer();
+    void               CallAllComponentRenderer(Gdiplus::Graphics&, Gdiplus::Rect = {});
+    unique_ptr<Frame>& GetContainer();
 
   private:
-    unique_ptr<Base> _pRoot = make_unique<Base>();
+    unique_ptr<Frame> _pRoot = make_unique<Frame>();
 };
 } // namespace Components
 } // namespace Launcher

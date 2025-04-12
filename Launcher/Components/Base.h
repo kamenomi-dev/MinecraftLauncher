@@ -101,10 +101,10 @@ class Base {
             }
 
             while (comp) {
-                comp = comp++;
+                comp = comp->GetNext();
             }
 
-            comp->_nodeComp.next = this;
+           if(comp) comp->_nodeComp.next = this;
             _nodeComp.prior      = comp;
         }
     }

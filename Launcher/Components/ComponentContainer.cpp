@@ -27,13 +27,13 @@ static Base* TryHitTest(
             continue;
         }
 
-        auto finalComp = TryHitTest(currComp->GetChildFirst(), targetPoint);
+
         if (Rect(currComp->GetPosition().x, currComp->GetPosition().y, currComp->GetSize().cx, currComp->GetSize().cy)
                 .Contains(targetPoint)) {
-            return finalComp == nullptr ? currComp : finalComp;
-        }
+            const auto childComp = TryHitTest(currComp->GetChildFirst(), targetPoint);
 
-        return finalComp;
+            return childComp == nullptr ? currComp : childComp;
+        }
 
         currComp = currComp->GetNext();
     }
@@ -84,6 +84,6 @@ void ComponentContainer::CallAllComponentRenderer(
     CallRenderer(GetContainer().get(), graphics, invalidatedRect);
 }
 
-unique_ptr<Base>& ComponentContainer::GetContainer() {
+unique_ptr<Frame>& ComponentContainer::GetContainer() {
     return _pRoot;
 }
