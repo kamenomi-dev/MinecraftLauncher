@@ -25,6 +25,7 @@ LauncherWindow::LauncherWindow(
 )
 : WindowWrapper(hInstance, LAUNCHER_WINDOW_CLASS, L"MinecraftLauncher", LauncherWindow::WindowsMessageProcessor) {
     this->SetSize({800, 600});
+    this->SetPosition(true);
 };
 
 bool LauncherWindow::WindowsMessageProcessor(

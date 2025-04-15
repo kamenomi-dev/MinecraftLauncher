@@ -25,7 +25,6 @@ class WindowWrapper : public ComponentContainer {
         POINT   position;
     };
 
-
     friend class LauncherWindow;
 
   public:
@@ -39,6 +38,7 @@ class WindowWrapper : public ComponentContainer {
     HWND  GetParent() const;
     void  SetSize(SIZE);
     SIZE  GetSize() const;
+    void  SetPosition(bool centered);
     void  SetPosition(POINT);
     POINT GetPosition() const;
 

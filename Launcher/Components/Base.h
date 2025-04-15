@@ -7,7 +7,21 @@ namespace Launcher {
 
 namespace Components {
 
+constexpr const wchar_t* BaseEventType              = L"Event.Base";
+constexpr const wchar_t* BaseEventType_Create       = L"Event.Base.Create";
+constexpr const wchar_t* BaseEventType_Destroy      = L"Event.Base.Destroy";
+constexpr const wchar_t* BaseEventType_Paint        = L"Event.Base.Paint";
+constexpr const wchar_t* BaseEventType_Move         = L"Event.Base.Move";
+constexpr const wchar_t* BaseEventType_Size         = L"Event.Base.Size";
+constexpr const wchar_t* BaseEventType_MouseMoveIn  = L"Event.Base.MoveIn";
+constexpr const wchar_t* BaseEventType_MouseMoveOut = L"Event.Base.MoveOut";
+
 class Base {
+
+    struct ComponentEventStruct {
+        const wchar_t* eventType;
+        void*          extendedData;
+    };
 
     struct ComponentNodeStruct {
         Base* prior;
@@ -30,8 +44,9 @@ class Base {
     // Invalidating self component is to update itself status.
     void         Invalidate();
     virtual void OnPaint(Gdiplus::Graphics&) {};
-
     virtual void OnDestroy() {};
+
+    virtual void ComponentEventHandler(ComponentEventStruct){};
 
     void    SetID(const wstring);
     wstring GetID() const;
@@ -41,12 +56,11 @@ class Base {
     SIZE    GetSize() const;
     void    SetPosition(const POINT);
     POINT   GetPosition() const;
-    
-   
-    void    SetVisible(const bool);
-    bool    GetVisible() const;
-    void    SetDisabled(const bool);
-    bool    GetDisabled() const;
+
+    void SetVisible(const bool);
+    bool GetVisible() const;
+    void SetDisabled(const bool);
+    bool GetDisabled() const;
 
     void TagComponentFirst();
     bool IsFristComponent() const;
@@ -58,7 +72,7 @@ class Base {
     __declspec(property(get = GetSize, put = SetSize)) SIZE          ComponentSize;
     __declspec(property(get = GetPosition, put = SetPosition)) POINT ComponentPosition;
 
-    __declspec(property(get = GetVisible, put = SetVisible)) bool Visible;
+    __declspec(property(get = GetVisible, put = SetVisible)) bool   Visible;
     __declspec(property(get = GetDisabled, put = SetDisabled)) bool Disabled;
     // Node Operation
     LastNodeStatusStruct Detach() {
@@ -104,8 +118,8 @@ class Base {
                 comp = comp->GetNext();
             }
 
-           if(comp) comp->_nodeComp.next = this;
-            _nodeComp.prior      = comp;
+            if (comp) comp->_nodeComp.next = this;
+            _nodeComp.prior = comp;
         }
     }
     void SetPrior(

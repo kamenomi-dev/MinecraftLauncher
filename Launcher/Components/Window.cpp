@@ -123,6 +123,21 @@ SIZE WindowWrapper::GetSize() const {
 }
 
 void WindowWrapper::SetPosition(
+    bool centered
+) {
+    if (!centered) {
+        // No process.
+        return;
+    }
+
+    auto sz = GetSize();
+    auto cx = GetSystemMetrics(SM_CXFULLSCREEN);
+    auto cy = GetSystemMetrics(SM_CYFULLSCREEN);
+
+    SetPosition({(int)((cx - sz.cx) / 2), (int)((cy - sz.cy) / 2)});
+}
+
+void WindowWrapper::SetPosition(
     POINT position
 ) {
     if (_bInit) {
