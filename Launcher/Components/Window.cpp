@@ -158,31 +158,18 @@ POINT WindowWrapper::GetPosition() const {
     return _initOptions.position;
 }
 
-struct MessageProcessorEnvironmentInformation {
-    WindowWrapper* pWindowWrapper;
-    Base*          pCurrHoveredComp;
-    Base*          pPrevHoveredComp;
-
-    MessageProcessorEnvironmentInformation() {
-        pWindowWrapper   = nullptr;
-        pCurrHoveredComp = nullptr;
-        pPrevHoveredComp = nullptr;
-    }
-};
-
 LRESULT WindowWrapper::CommonWindowsMessageProcessor(
     HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 ) {
-    static unordered_map<HWND, MessageProcessorEnvironmentInformation> envInfoMap{};
-    auto&                                                              envInfo  = envInfoMap[hWnd];
-    auto&                                                              pWrapper = envInfo.pWindowWrapper;
+    static unordered_map<HWND, WindowWrapper*> wrappers{};
+    auto&                                      pWrapper = wrappers[hWnd];
 
     if (uMsg == WM_NCCREATE) {
         const auto createStruct = *(CREATESTRUCTW*)lParam;
         const auto wrapper      = (WindowWrapper*)createStruct.lpCreateParams;
 
         if (wrapper) {
-            envInfoMap[hWnd].pWindowWrapper = wrapper;
+            wrappers[hWnd] = wrapper;
             // Handle has already existed, but CreateWindowEx hasn't returned it.
             wrapper->_hWnd = hWnd;
             wrapper->OnCreate(true);
@@ -230,30 +217,17 @@ LRESULT WindowWrapper::CommonWindowsMessageProcessor(
         return NULL;
     }
 
-    if (uMsg == WM_MOUSEMOVE) {
-        auto currComp = pWrapper->HitTest(lParam);
-        if (currComp == envInfo.pCurrHoveredComp) {
-            return NULL;
-        }
-
-        envInfo.pPrevHoveredComp = envInfo.pCurrHoveredComp;
-        envInfo.pCurrHoveredComp = currComp;
-        cos(1);
-
-        return NULL;
-    }
-
     if (uMsg == WM_CLOSE) {
         if (pWrapper) {
             if (pWrapper->OnClose()) {
                 pWrapper->_WindowExit();
-                envInfoMap.erase(hWnd);
+                wrappers.erase(hWnd);
             } else {
                 return 0;
             }
         }
 
-        if (envInfoMap.empty()) {
+        if (wrappers.empty()) {
             PostQuitMessage(NULL);
         }
     }
@@ -263,6 +237,11 @@ LRESULT WindowWrapper::CommonWindowsMessageProcessor(
         if (pWrapper && pWrapper->_wndProc(hWnd, uMsg, wParam, lParam, hResult)) {
             return hResult;
         }
+    }
+
+    LRESULT lResult{NULL};
+    if (pWrapper && pWrapper->SystemMessageProcessor(hWnd, uMsg, wParam, lParam, lResult)) {
+        return lResult;
     }
 
     return DefWindowProc(hWnd, uMsg, wParam, lParam);

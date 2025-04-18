@@ -7,22 +7,14 @@ namespace Launcher {
 
 namespace Components {
 
-constexpr const wchar_t* BaseEventType              = L"Event.Base";
-constexpr const wchar_t* BaseEventType_Create       = L"Event.Base.Create";
-constexpr const wchar_t* BaseEventType_Destroy      = L"Event.Base.Destroy";
-constexpr const wchar_t* BaseEventType_Paint        = L"Event.Base.Paint";
-constexpr const wchar_t* BaseEventType_Move         = L"Event.Base.Move";
-constexpr const wchar_t* BaseEventType_Size         = L"Event.Base.Size";
-constexpr const wchar_t* BaseEventType_MouseMoveIn  = L"Event.Base.MoveIn";
-constexpr const wchar_t* BaseEventType_MouseMoveOut = L"Event.Base.MoveOut";
-
 class Base {
 
-    struct ComponentEventStruct {
-        const wchar_t* eventType;
-        void*          extendedData;
+  public:
+    struct BaseNotificationInformation {
+
     };
 
+    private:
     struct ComponentNodeStruct {
         Base* prior;
         Base* next;
@@ -41,12 +33,11 @@ class Base {
   public:
     ~Base();
 
+    void Initialize() { _bInited = true; };
     // Invalidating self component is to update itself status.
     void         Invalidate();
     virtual void OnPaint(Gdiplus::Graphics&) {};
     virtual void OnDestroy() {};
-
-    virtual void ComponentEventHandler(ComponentEventStruct){};
 
     void    SetID(const wstring);
     wstring GetID() const;

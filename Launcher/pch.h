@@ -18,6 +18,7 @@
 #pragma comment(lib, "gdiplus.lib")
 
 #include <stack>
+#include <vector>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -30,6 +31,7 @@ using std::unique_ptr;
 
 using std::initializer_list;
 using std::stack;
+using std::vector;
 using std::unordered_map;
 using std::wstring;
 

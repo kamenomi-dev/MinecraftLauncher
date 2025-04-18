@@ -10,8 +10,9 @@ class LauncherWindow : public Components::WindowWrapper {
   public:
     LauncherWindow(HINSTANCE);
 
-    static bool WindowsMessageProcessor(HWND, UINT, WPARAM, LPARAM, LRESULT&);
+    static bool SystemMessageProcessor(HWND, UINT, WPARAM, LPARAM, LRESULT&);
     void        OnCreate(bool);
+    static void OnNotify(Components::NotificationInformation<>&);
     void        OnPaint(Gdiplus::Graphics&);
 };
 } // namespace Launcher

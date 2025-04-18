@@ -1,4 +1,5 @@
 ﻿#include "pch.h"
+#include "Defines.h"
 #include "Utils.h"
 #include "Render.h"
 
@@ -23,12 +24,13 @@ int APIENTRY wWinMain(
 LauncherWindow::LauncherWindow(
     HINSTANCE hInstance
 )
-: WindowWrapper(hInstance, LAUNCHER_WINDOW_CLASS, L"MinecraftLauncher", LauncherWindow::WindowsMessageProcessor) {
+: WindowWrapper(hInstance, LAUNCHER_WINDOW_CLASS, L"MinecraftLauncher", LauncherWindow::SystemMessageProcessor) {
     this->SetSize({800, 600});
     this->SetPosition(true);
+    this->RegisterNotificationReceiver(OnNotify);
 };
 
-bool LauncherWindow::WindowsMessageProcessor(
+bool LauncherWindow::SystemMessageProcessor(
     HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& result
 ) {
 
@@ -46,6 +48,11 @@ void LauncherWindow::OnCreate(
     if (b) return;
 
     // Utils::Window::EnableBackgroundBlur(hWindow, true);
+}
+
+void LauncherWindow::OnNotify(Components::NotificationInformation<>& notify)
+{
+    cos(1);
 }
 
 void LauncherWindow::OnPaint(

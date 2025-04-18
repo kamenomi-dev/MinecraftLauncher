@@ -139,6 +139,7 @@
     <ClInclude Include="Components\ComponentContainer.h" />
     <ClInclude Include="Components\Frame.h" />
     <ClInclude Include="Components\Window.h" />
+    <ClInclude Include="Defines.h" />
     <ClInclude Include="Interfaces\User32\WindowCompositionAttribute.h" />
     <ClInclude Include="Launcher.h" />
     <ClInclude Include="pch.h" />

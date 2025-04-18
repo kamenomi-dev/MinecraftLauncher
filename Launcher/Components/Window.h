@@ -47,6 +47,7 @@ class WindowWrapper : public ComponentContainer {
 
     virtual void OnCreate(bool bNonClient) {};
     virtual bool OnClose() { return true; };
+    // virtual void OnNotify(Components::NotificationInformation<>) {};
     virtual void OnPaint(Gdiplus::Graphics&) {};
     virtual void OnExit() {};
 

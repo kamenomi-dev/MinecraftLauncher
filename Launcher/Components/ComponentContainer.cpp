@@ -4,9 +4,18 @@
 using namespace Gdiplus;
 using namespace Launcher::Components;
 
+class WindowWrapper;
+
 ComponentContainer::ComponentContainer() {
     _pRoot->SetType(L"Comp.Root");
     _pRoot->TagComponentFirst();
+    _pRoot->Initialize();
+}
+
+void ComponentContainer::RegisterNotificationReceiver(
+    NotificationReceiver* receiver
+) {
+    _notificationReceivers.push_back(receiver);
 }
 
 void ComponentContainer::Push(
@@ -14,6 +23,7 @@ void ComponentContainer::Push(
 ) {
     for (auto component : components) {
         component->SetParent(_pRoot.get());
+        component->Initialize();
     }
 }
 
@@ -76,6 +86,40 @@ static void CallRenderer(
 
         currComp = currComp->GetNext();
     }
+}
+
+bool ComponentContainer::SystemMessageProcessor(
+    HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lResult
+) {
+    NotificationInformation<> notifyInfo{NULL};
+
+    notifyInfo.OriginalData = {hWnd, uMsg, wParam, lParam};
+
+    if (uMsg == WM_MOUSEMOVE) {
+        auto currComp = HitTest(lParam);
+        if (currComp == _statusInfo.pCurrHoveredComp) {
+            return NULL;
+        }
+
+        _statusInfo.pPrevHoveredComp = _statusInfo.pCurrHoveredComp;
+        _statusInfo.pCurrHoveredComp = currComp;
+
+        if (_statusInfo.pPrevHoveredComp) {
+            notifyInfo.Emitter    = _statusInfo.pPrevHoveredComp;
+            notifyInfo.NotifyType = NOTIFY_COMPONENT_MOVEOUT;
+            CallAllNotificationReceivers(notifyInfo);
+        }
+
+        if (_statusInfo.pCurrHoveredComp) {
+            notifyInfo.Emitter    = _statusInfo.pCurrHoveredComp;
+            notifyInfo.NotifyType = NOTIFY_COMPONENT_MOVEIN;
+            CallAllNotificationReceivers(notifyInfo);
+        }
+
+        return true;
+    }
+
+    return false;
 }
 
 void ComponentContainer::CallAllComponentRenderer(

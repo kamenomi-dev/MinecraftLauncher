@@ -3,6 +3,7 @@
 #ifndef _Component_ComponentContainer_h_
 #define _Component_ComponentContainer_h_
 
+#include "Defines.h"
 #include "Base.h"
 #include "Frame.h"
 
@@ -10,10 +11,37 @@ namespace Launcher {
 namespace Components {
 
 typedef void(__stdcall ForEachFeedback)(Base*, void*);
+typedef void(__stdcall NotificationReceiver)(NotificationInformation<>&);
 
 class ComponentContainer {
+
+    typedef struct __structStatusEnvironmentInformation {
+        Base* pCurrHoveredComp;
+        Base* pPrevHoveredComp;
+
+        __structStatusEnvironmentInformation() {
+            pCurrHoveredComp = nullptr;
+            pPrevHoveredComp = nullptr;
+        }
+    } StatusEnvironmentInformation, SEI_;
+
   public:
     ComponentContainer();
+
+    void RegisterNotificationReceiver(NotificationReceiver*);
+    template <typename DetailInformation = Base::BaseNotificationInformation>
+    void CallAllNotificationReceivers(
+        NotificationInformation<DetailInformation>& notify
+    ) {
+        for (auto pFn : _notificationReceivers) {
+            if (!pFn) {
+                OutputDebugStringA("Oops, notify receiver should not be nullptr. ");
+                abort();
+            }
+
+            pFn(notify);
+        }
+    };
 
     void Push(initializer_list<Base*>);
     template <typename P>
@@ -44,11 +72,15 @@ class ComponentContainer {
 
     Base* HitTest(LPARAM);
 
-    void               CallAllComponentRenderer(Gdiplus::Graphics&, Gdiplus::Rect = {});
+    bool SystemMessageProcessor(HWND, UINT, WPARAM, LPARAM, LRESULT&);
+    void CallAllComponentRenderer(Gdiplus::Graphics&, Gdiplus::Rect = {});
+
     unique_ptr<Frame>& GetContainer();
 
   private:
-    unique_ptr<Frame> _pRoot = make_unique<Frame>();
+    unique_ptr<Frame>             _pRoot = make_unique<Frame>();
+    vector<NotificationReceiver*> _notificationReceivers{};
+    StatusEnvironmentInformation  _statusInfo{};
 };
 } // namespace Components
 } // namespace Launcher

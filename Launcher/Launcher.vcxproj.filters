@@ -45,6 +45,9 @@
     <ClInclude Include="Components\Frame.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Defines.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Launcher.cpp">
