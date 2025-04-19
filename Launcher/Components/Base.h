@@ -1,27 +1,27 @@
 #pragma once
-
 #ifndef _Component_Base_H_
 #define _Component_Base_H_
+
+#include "Defines.h"
 
 namespace Launcher {
 
 namespace Components {
 
+class Frame;
+
+struct BaseNotificationInformation {};
+
 class Base {
 
-  public:
-    struct BaseNotificationInformation {
-
-    };
-
-    private:
+  private:
     struct ComponentNodeStruct {
         Base* prior;
         Base* next;
 
-        Base* root;
-        Base* parent;
-        Base* childFirst;
+        Frame* root;
+        Base*  parent;
+        Base*  childFirst;
     };
 
     struct LastNodeStatusStruct {
@@ -37,6 +37,7 @@ class Base {
     // Invalidating self component is to update itself status.
     void         Invalidate();
     virtual void OnPaint(Gdiplus::Graphics&) {};
+    virtual void OnNotify(NotificationInformation<BaseNotificationInformation>&) {};
     virtual void OnDestroy() {};
 
     void    SetID(const wstring);
@@ -88,7 +89,7 @@ class Base {
 
     // Node Operation Setter Not safe.
     void SetRoot(
-        Base* ptr
+        Frame* ptr
     ) {
         _nodeComp.root = ptr;
     }
@@ -203,11 +204,11 @@ class Base {
     }
 
     // Node Operation Getter
-    Base* GetRoot() { return _nodeComp.root; }
-    Base* GetParent() { return _nodeComp.parent; }
-    Base* GetPrior() { return _nodeComp.prior; };
-    Base* GetNext() { return _nodeComp.next; };
-    Base* GetChildFirst() { return _nodeComp.childFirst; }
+    Frame* GetRoot() { return _nodeComp.root; }
+    Base*  GetParent() { return _nodeComp.parent; }
+    Base*  GetPrior() { return _nodeComp.prior; };
+    Base*  GetNext() { return _nodeComp.next; };
+    Base*  GetChildFirst() { return _nodeComp.childFirst; }
 
   private:
     bool _bFirst{false};

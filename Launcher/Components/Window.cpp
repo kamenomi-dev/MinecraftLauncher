@@ -1,11 +1,15 @@
 #include "pch.h"
 #include "Window.h"
 
+#include "Frame.h"
+
 using namespace Launcher::Components;
 
 WindowWrapper::WindowWrapper(
     HINSTANCE hInstance, wstring classText, wstring titleText, WndProc pfnWndProc
 ) {
+    ConnectWindow(this);
+
     _wndClass.hInstance   = hInstance;
     _wndClass.style       = CS_HREDRAW | CS_VREDRAW;
     _wndClass.lpfnWndProc = &WindowWrapper::CommonWindowsMessageProcessor;

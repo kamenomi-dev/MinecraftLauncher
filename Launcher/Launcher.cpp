@@ -4,6 +4,7 @@
 #include "Render.h"
 
 #include "./Components/Window.h"
+#include "./Components/Button.h"
 
 #include "Launcher.h"
 
@@ -53,10 +54,14 @@ void LauncherWindow::OnCreate(
 void LauncherWindow::OnNotify(Components::NotificationInformation<>& notify)
 {
     cos(1);
+
+    if (notify.NotifyType == Components::NOTIFY_COMPONENT_MOUSECLICK) {
+        MessageBoxW(notify.OriginalData.hWnd, notify.Emitter->ComponentID.c_str(), L"Clicked", S_OK);
+    }
 }
 
 void LauncherWindow::OnPaint(
     Gdiplus::Graphics& grap
 ) {
-    grap.Clear(Gdiplus::Color(255, rand() % 255, 23, 20));
+    grap.Clear(Gdiplus::Color::CornflowerBlue);
 }

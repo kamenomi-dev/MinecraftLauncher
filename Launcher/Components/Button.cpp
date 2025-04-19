@@ -14,11 +14,25 @@ void Button::OnPaint(
 
     SolidBrush brush{Color::Beige};
 
-    graphics.Clear(Color::PaleGoldenrod);
+    graphics.Clear(_btnStatus.isMouseDown ? Color(56, 56, 56) : (_btnStatus.isMouseHovered ? Color(61, 61, 61) : Color(31, 31, 31)));
     graphics.DrawString(
         _btnContent.c_str(), _btnContent.size(), &contentFont, RectF(0, 0, GetSize().cx, GetSize().cy), &centeredFormat,
         &brush
     );
+}
+
+void Button::OnNotify(
+    NotificationInformation<>& notify
+) {
+    if (lstrcmpW(notify.NotifyType, NOTIFY_COMPONENT_MOVEIN) == 0 or lstrcmpW(notify.NotifyType, NOTIFY_COMPONENT_MOVEOUT) == 0) {
+        _btnStatus.isMouseHovered = (lstrcmpW(notify.NotifyType, NOTIFY_COMPONENT_MOVEIN) == 0);
+        Invalidate();
+    }
+
+    if (lstrcmpW(notify.NotifyType, NOTIFY_COMPONENT_MOUSEUP) == 0 or lstrcmpW(notify.NotifyType, NOTIFY_COMPONENT_MOUSEDOWN) == 0) {
+        _btnStatus.isMouseDown = (lstrcmpW(notify.NotifyType, NOTIFY_COMPONENT_MOUSEDOWN) == 0);
+        Invalidate();
+    }
 }
 
 wstring Button::GetContent() {

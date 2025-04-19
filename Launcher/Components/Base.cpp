@@ -1,5 +1,8 @@
 #include "pch.h"
 #include "Base.h"
+#include "Frame.h"
+#include "Window.h"
+#include "ComponentContainer.h"
 
 using namespace Launcher::Components;
 
@@ -10,6 +13,14 @@ Base::~Base() {
 
 void Base::Invalidate() {
     // Todo
+    /*RECT rcWnd{NULL};
+    rcWnd.left   = ComponentPosition.x;
+    rcWnd.top    = ComponentPosition.y;
+    rcWnd.right  = ComponentPosition.x + ComponentSize.cx;
+    rcWnd.bottom = ComponentPosition.y + ComponentSize.cy;*/
+
+    if (_nodeComp.root)
+        InvalidateRect((HWND)_nodeComp.root->componentContainer->GetWrapper()->GetRenderableHandle(), NULL, FALSE);
 };
 
 void Base::SetID(

@@ -4,12 +4,22 @@
 #define _Component_Frame_H_
 
 #include "Base.h"
+#include "ComponentContainer.h"
 
 namespace Launcher {
 namespace Components {
+
 class Frame : public Base {
   public:
-    Frame() : Base() { SetType(L"Comp.Frame"); };
+    Frame(
+        ComponentContainer* container
+    )
+    : Base() {
+        SetType(L"Comp.Frame");
+        componentContainer = container;
+    };
+
+    ComponentContainer* componentContainer;
 };
 } // namespace Components
 } // namespace Launcher

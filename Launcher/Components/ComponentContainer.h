@@ -4,11 +4,13 @@
 #define _Component_ComponentContainer_h_
 
 #include "Defines.h"
-#include "Base.h"
-#include "Frame.h"
 
 namespace Launcher {
 namespace Components {
+
+class Base;
+class Frame;
+class Interface_BaseWrapper;
 
 typedef void(__stdcall ForEachFeedback)(Base*, void*);
 typedef void(__stdcall NotificationReceiver)(NotificationInformation<>&);
@@ -28,11 +30,17 @@ class ComponentContainer {
   public:
     ComponentContainer();
 
+    void ConnectWindow(Interface_BaseWrapper*);
+
     void RegisterNotificationReceiver(NotificationReceiver*);
-    template <typename DetailInformation = Base::BaseNotificationInformation>
+    template <typename DetailInformation = BaseNotificationInformation>
     void CallAllNotificationReceivers(
         NotificationInformation<DetailInformation>& notify
     ) {
+        if (notify.Emitter) {
+            notify.Emitter->OnNotify(notify);
+        }
+
         for (auto pFn : _notificationReceivers) {
             if (!pFn) {
                 OutputDebugStringA("Oops, notify receiver should not be nullptr. ");
@@ -44,7 +52,7 @@ class ComponentContainer {
     };
 
     void Push(initializer_list<Base*>);
-    template <typename P>
+    /*template <typename P>
     void ForEach(
         ForEachFeedback feedback, P& params
     ) {
@@ -68,17 +76,19 @@ class ComponentContainer {
                 tempStack.pop();
             }
         }
-    }
+    }*/
 
     Base* HitTest(LPARAM);
 
     bool SystemMessageProcessor(HWND, UINT, WPARAM, LPARAM, LRESULT&);
     void CallAllComponentRenderer(Gdiplus::Graphics&, Gdiplus::Rect = {});
 
-    unique_ptr<Frame>& GetContainer();
+    unique_ptr<Frame>&     GetContainer();
+    Interface_BaseWrapper* GetWrapper() { return _pConnectedWindow; };
 
   private:
-    unique_ptr<Frame>             _pRoot = make_unique<Frame>();
+    Interface_BaseWrapper*        _pConnectedWindow{nullptr};
+    unique_ptr<Frame>             _pRoot;
     vector<NotificationReceiver*> _notificationReceivers{};
     StatusEnvironmentInformation  _statusInfo{};
 };

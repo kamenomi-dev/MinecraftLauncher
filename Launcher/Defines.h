@@ -1,5 +1,4 @@
 #pragma once
-#include "./Components/Base.h"
 
 #ifndef __DEFINES_H__
 #define __DEFINES_H__
@@ -9,7 +8,15 @@ namespace Components {
 constexpr auto NOTIFY_COMPONENT_MOVEIN  = L"Notify.Component.MoveIn";
 constexpr auto NOTIFY_COMPONENT_MOVEOUT = L"Notify.Component.MoveOut";
 
-template <typename DetailInformation = Base::BaseNotificationInformation>
+constexpr auto NOTIFY_COMPONENT_MOUSEUP          = L"Notify.Component.MouseUp";
+constexpr auto NOTIFY_COMPONENT_MOUSEDOWN        = L"Notify.Component.MouseDown";
+constexpr auto NOTIFY_COMPONENT_MOUSECLICK       = L"Notify.Component.MouseClick";
+constexpr auto NOTIFY_COMPONENT_MOUSEDOUBLECLICK = L"Notify.Component.MouseDoubleClick";
+
+class Base;
+struct BaseNotificationInformation;
+
+template <typename DetailInformation = BaseNotificationInformation>
 struct NotificationInformation {
     const wchar_t*    NotifyType;
     Base*             Emitter;

@@ -1,15 +1,25 @@
 #include "pch.h"
+#include "Defines.h"
 #include "ComponentContainer.h"
+
+#include "Base.h"
+#include "Frame.h"
+#include "Window.h"
 
 using namespace Gdiplus;
 using namespace Launcher::Components;
 
-class WindowWrapper;
-
 ComponentContainer::ComponentContainer() {
+    _pRoot = make_unique<Frame>(this);
     _pRoot->SetType(L"Comp.Root");
     _pRoot->TagComponentFirst();
     _pRoot->Initialize();
+}
+
+void ComponentContainer::ConnectWindow(
+    Interface_BaseWrapper* wrapper
+) {
+    _pConnectedWindow = wrapper;
 }
 
 void ComponentContainer::RegisterNotificationReceiver(
@@ -22,6 +32,7 @@ void ComponentContainer::Push(
     initializer_list<Base*> components
 ) {
     for (auto component : components) {
+        component->SetRoot(_pRoot.get());
         component->SetParent(_pRoot.get());
         component->Initialize();
     }
@@ -117,6 +128,35 @@ bool ComponentContainer::SystemMessageProcessor(
         }
 
         return true;
+    }
+
+
+    static Base* draggingComponent{nullptr};
+    if (uMsg == WM_LBUTTONDOWN) {
+        notifyInfo.Emitter    = HitTest(lParam);
+        notifyInfo.NotifyType = NOTIFY_COMPONENT_MOUSEDOWN;
+        CallAllNotificationReceivers(notifyInfo);
+
+        draggingComponent = notifyInfo.Emitter;
+    }
+
+    if (uMsg == WM_LBUTTONUP) {
+        notifyInfo.Emitter = draggingComponent;
+        if (draggingComponent == nullptr) {
+            notifyInfo.Emitter = HitTest(lParam);
+        }
+
+        notifyInfo.NotifyType = NOTIFY_COMPONENT_MOUSEUP;
+        CallAllNotificationReceivers(notifyInfo);
+
+        notifyInfo.NotifyType = NOTIFY_COMPONENT_MOUSECLICK;
+        CallAllNotificationReceivers(notifyInfo);
+    }
+
+    if (uMsg == WM_LBUTTONDBLCLK) {
+        notifyInfo.Emitter    = HitTest(lParam);
+        notifyInfo.NotifyType = NOTIFY_COMPONENT_MOUSEDOUBLECLICK;
+        CallAllNotificationReceivers(notifyInfo);
     }
 
     return false;

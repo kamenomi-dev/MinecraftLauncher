@@ -4,13 +4,17 @@
 #define _Component_Window_Header_
 
 #include "Render.h"
-#include "Button.h"
 #include "ComponentContainer.h"
 
 namespace Launcher {
 namespace Components {
 
-class WindowWrapper : public ComponentContainer {
+class Interface_BaseWrapper {
+  public:
+    virtual HANDLE GetRenderableHandle() const { return nullptr; };
+};
+
+class WindowWrapper : public Interface_BaseWrapper, public ComponentContainer {
 
   public:
     typedef bool(__stdcall* WndProc)(HWND, UINT, WPARAM, LPARAM, LRESULT&);
@@ -51,7 +55,8 @@ class WindowWrapper : public ComponentContainer {
     virtual void OnPaint(Gdiplus::Graphics&) {};
     virtual void OnExit() {};
 
-    HWND GetHWND() const { return _hWnd; };
+    HWND   GetHWND() const { return _hWnd; };
+    HANDLE GetRenderableHandle() const { return _hWnd; };
 
     __declspec(property(get = GetHWND)) HWND hWindow;
 
