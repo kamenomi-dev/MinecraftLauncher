@@ -16,7 +16,7 @@ void Button::OnPaint(
 
     graphics.Clear(_btnStatus.isMouseDown ? Color(56, 56, 56) : (_btnStatus.isMouseHovered ? Color(61, 61, 61) : Color(31, 31, 31)));
     graphics.DrawString(
-        _btnContent.c_str(), _btnContent.size(), &contentFont, RectF(0, 0, GetSize().cx, GetSize().cy), &centeredFormat,
+        _textContent.c_str(), _textContent.size(), &contentFont, RectF(0, 0, GetSize().cx, GetSize().cy), &centeredFormat,
         &brush
     );
 }
@@ -36,13 +36,13 @@ void Button::OnNotify(
 }
 
 wstring Button::GetContent() {
-    return _btnContent;
+    return _textContent;
 }
 
 void Button::SetContent(
     const wstring& content
 ) {
-    _btnContent = content;
+    _textContent = content;
     Invalidate();
 }
 

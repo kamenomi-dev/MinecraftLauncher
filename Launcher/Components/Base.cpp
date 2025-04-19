@@ -13,14 +13,14 @@ Base::~Base() {
 
 void Base::Invalidate() {
     // Todo
-    /*RECT rcWnd{NULL};
+    RECT rcWnd{NULL};
     rcWnd.left   = ComponentPosition.x;
     rcWnd.top    = ComponentPosition.y;
     rcWnd.right  = ComponentPosition.x + ComponentSize.cx;
-    rcWnd.bottom = ComponentPosition.y + ComponentSize.cy;*/
+    rcWnd.bottom = ComponentPosition.y + ComponentSize.cy;
 
     if (_nodeComp.root)
-        InvalidateRect((HWND)_nodeComp.root->componentContainer->GetWrapper()->GetRenderableHandle(), NULL, FALSE);
+        InvalidateRect((HWND)_nodeComp.root->componentContainer->GetWrapper()->GetRenderableHandle(), &rcWnd, 1);
 };
 
 void Base::SetID(

@@ -21,6 +21,7 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <type_traits>
 #include <unordered_map>
 #include <initializer_list>
 
@@ -31,8 +32,8 @@ using std::unique_ptr;
 
 using std::initializer_list;
 using std::stack;
-using std::vector;
 using std::unordered_map;
+using std::vector;
 using std::wstring;
 
 #endif // PCH_H

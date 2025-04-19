@@ -82,7 +82,7 @@ static void CallRenderer(
             Rect(currComp->GetPosition().x, currComp->GetPosition().y, currComp->GetSize().cx, currComp->GetSize().cy);
 
         if (not invalidatedRect.IsEmptyArea()) {
-            currRect.Intersect(invalidatedRect);
+            graphics.SetClip(invalidatedRect);
         }
 
         const auto status = graphics.Save();

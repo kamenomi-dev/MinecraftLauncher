@@ -7,19 +7,11 @@
 
 namespace Launcher {
 namespace Components {
-class Button : public Base {
-
-  private:
-    struct ButtonStatus {
-        bool isMouseHovered;
-        bool isMouseDown;
-    };
-
+class Text : public Base {
   public:
-    Button() : Base() { SetType(L"Comp.Button"); };
+    Text() : Base() { SetType(L"Comp.Text"); };
 
     void OnPaint(Gdiplus::Graphics&);
-    void OnNotify(NotificationInformation<>&);
 
     wstring GetContent();
     void    SetContent(const wstring&);
@@ -27,11 +19,11 @@ class Button : public Base {
     __declspec(property(get = GetContent, put = SetContent)) wstring Content;
 
   private:
-    wstring      _textContent{};
-    ButtonStatus _btnStatus{};
+    wstring           _textContent{};
+    Utils::FlagBits_i _statusFlagBits{};
 };
 
-Button* button(wstring ID, SIZE size, POINT position, const wstring& content = L"Button");
+Text* text(wstring ID, SIZE size, POINT position, const wstring& content = L"text");
 
 } // namespace Components
 } // namespace Launcher

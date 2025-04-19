@@ -145,6 +145,7 @@
     <ClInclude Include="Components\Button.h" />
     <ClInclude Include="Components\ComponentContainer.h" />
     <ClInclude Include="Components\Frame.h" />
+    <ClInclude Include="Components\Text.h" />
     <ClInclude Include="Components\Window.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="Interfaces\User32\WindowCompositionAttribute.h" />
@@ -158,6 +159,7 @@
     <ClCompile Include="Components\Button.cpp" />
     <ClCompile Include="Components\ComponentContainer.cpp" />
     <ClCompile Include="Components\Frame.cpp" />
+    <ClCompile Include="Components\Text.cpp" />
     <ClCompile Include="Components\Window.cpp" />
     <ClCompile Include="Interfaces\User32\WindowCompositionAttribute.cpp" />
     <ClCompile Include="Launcher.cpp" />

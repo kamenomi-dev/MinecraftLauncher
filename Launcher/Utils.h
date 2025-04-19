@@ -43,6 +43,44 @@ bool EnableBackgroundBlur(HWND, bool bToggle);
 bool EnableBackgroundBlur(HWND, bool, BlurTypes);
 } // namespace Window
 
+template <std::unsigned_integral T>
+struct FlagBits {
+    T Value = NULL;
+
+    FlagBits(
+        initializer_list<T> flags
+    ) {
+        for (auto flag : flags) {
+            Value |= flag;
+        }
+    }
+
+    bool Has(T value) {
+        return (Value & ~value) != Value;
+    }
+
+    UCHAR PickUp(
+      T index
+    ) {
+        return (Value >> index) & 0b1;
+    }
+
+    T operator|=(
+        T value
+    ) {
+        return Value |= value;
+    }
+
+    T operator^=(
+        T value
+    ) {
+        return Value &= ~value;
+    }
+};
+
+using FlagBits_i = FlagBits<UINT>;
+using FlagBits_ll = FlagBits<ULONGLONG>;
+
 } // namespace Utils
 } // namespace Launcher
 
