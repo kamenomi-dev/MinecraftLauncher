@@ -17,6 +17,7 @@
 #include <gdiplus.h>
 #pragma comment(lib, "gdiplus.lib")
 
+#include <bit>
 #include <stack>
 #include <vector>
 #include <memory>

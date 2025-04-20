@@ -31,7 +31,7 @@ class Button : public Base {
     ButtonStatus _btnStatus{};
 };
 
-Button* button(wstring ID, SIZE size, POINT position, const wstring& content = L"Button");
+Button* button(wstring ID, POINT position, SIZE size, const wstring& content = L"Button");
 
 } // namespace Components
 } // namespace Launcher

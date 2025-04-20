@@ -47,7 +47,7 @@ void Button::SetContent(
 }
 
 Button* Launcher::Components::button(
-    wstring ID, SIZE size, POINT position, const wstring& content
+    wstring ID, POINT position, SIZE size, const wstring& content
 ) {
     const auto ptr = new Button;
     ptr->SetID(ID);

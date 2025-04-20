@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "Utils.h"
+// #include "Utils.h"
 #include "Text.h"
 
 using namespace Gdiplus;
@@ -10,14 +10,14 @@ void Text::OnPaint(
 ) {
     Font         contentFont{L"Segoe UI", 16, FontStyleBold};
     StringFormat centeredFormat{};
-    centeredFormat.SetAlignment(StringAlignmentCenter);
-    centeredFormat.SetLineAlignment(StringAlignmentCenter);
+    centeredFormat.SetAlignment((StringAlignment)_statusFlags.VerticalAligment);
+    centeredFormat.SetLineAlignment((StringAlignment)_statusFlags.HorizonalAligment);
 
     SolidBrush brush{Color::Beige};
 
     graphics.DrawString(
-        _textContent.c_str(), _textContent.size(), &contentFont, RectF(0, 0, GetSize().cx, GetSize().cy), &centeredFormat,
-        &brush
+        _textContent.c_str(), _textContent.size(), &contentFont, RectF(0, 0, GetSize().cx, GetSize().cy),
+        &centeredFormat, &brush
     );
 }
 
@@ -32,8 +32,29 @@ void Text::SetContent(
     Invalidate();
 }
 
+TextHorzionalAlignmentStyles Text::GetHorzionalAligement() const {
+    return (TextHorzionalAlignmentStyles)(_statusFlags.HorizonalAligment);
+}
+
+void Text::SetHorzionalAligement(
+    const TextHorzionalAlignmentStyles alignment
+) {
+    _statusFlags.HorizonalAligment = (UCHAR)alignment;
+}
+
+TextVerticalAlignmentStyles Text::GetVerticalAligement() const {
+    return (TextVerticalAlignmentStyles)(_statusFlags.VerticalAligment);
+}
+
+void Text::SetVerticalAligement(
+    const TextVerticalAlignmentStyles alignment
+) {
+    _statusFlags.VerticalAligment = (UCHAR)alignment;
+}
+
 Text* Launcher::Components::text(
-    wstring ID, SIZE size, POINT position, const wstring& content
+    wstring ID, POINT position, SIZE size, const wstring& content, const TextHorzionalAlignmentStyles hor,
+    const TextVerticalAlignmentStyles ver
 ) {
     const auto ptr = new Text;
     ptr->SetID(ID);
@@ -41,6 +62,8 @@ Text* Launcher::Components::text(
     ptr->SetPosition(position);
 
     ptr->SetContent(content);
+    ptr->SetHorzionalAligement(hor);
+    ptr->SetVerticalAligement(ver);
 
     return ptr;
 }

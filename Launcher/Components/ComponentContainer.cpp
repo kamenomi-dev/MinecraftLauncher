@@ -81,9 +81,9 @@ static void CallRenderer(
         auto currRect =
             Rect(currComp->GetPosition().x, currComp->GetPosition().y, currComp->GetSize().cx, currComp->GetSize().cy);
 
-        if (not invalidatedRect.IsEmptyArea()) {
+       /* if (not invalidatedRect.IsEmptyArea()) {
             graphics.SetClip(invalidatedRect);
-        }
+        }*/
 
         const auto status = graphics.Save();
         graphics.TranslateTransform(currRect.X, currRect.Y);
@@ -93,6 +93,8 @@ static void CallRenderer(
 
         CallRenderer(currComp->GetChildFirst(), graphics, invalidatedRect);
 
+        graphics.ResetClip();
+        graphics.ResetTransform();
         graphics.Restore(status);
 
         currComp = currComp->GetNext();
