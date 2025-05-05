@@ -40,6 +40,8 @@ class Base {
     virtual void OnNotify(NotificationInformation<BaseNotificationInformation>&) {};
     virtual void OnDestroy() {};
 
+    bool TryHitTest(const Gdiplus::Point);
+
     void    SetID(const wstring);
     wstring GetID() const;
     void    SetType(const wstring);
@@ -48,6 +50,20 @@ class Base {
     SIZE    GetSize() const;
     void    SetPosition(const POINT);
     POINT   GetPosition() const;
+
+    Gdiplus::Rect ConvertAbsoluteToRelative(
+        const Gdiplus::Rect absolute
+    ) const {
+        Gdiplus::Rect ret{absolute};
+        ret.Offset(-ComponentPosition.x, -ComponentPosition.y);
+        return ret;
+    }
+
+    Gdiplus::Point ConvertAbsoluteToRelative(
+        const Gdiplus::Point absolute
+    ) const {
+        return absolute - Gdiplus::Point(ComponentPosition.x, ComponentPosition.y);
+    };
 
     void SetVisible(const bool);
     bool GetVisible() const;
@@ -111,7 +127,7 @@ class Base {
             }
 
             comp->_nodeComp.next = this;
-            _nodeComp.prior = comp;
+            _nodeComp.prior      = comp;
         }
     }
     void SetPrior(

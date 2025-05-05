@@ -4,6 +4,8 @@
 #include "Window.h"
 #include "ComponentContainer.h"
 
+using namespace Gdiplus;
+
 using namespace Launcher::Components;
 
 Base::~Base() {
@@ -22,6 +24,14 @@ void Base::Invalidate() {
     if (_nodeComp.root)
         InvalidateRect((HWND)_nodeComp.root->componentContainer->GetWrapper()->GetRenderableHandle(), &rcWnd, 1);
 };
+
+bool Base::TryHitTest(
+    const Gdiplus::Point rawTarget
+) {
+    // auto target = ConvertAbsoluteToRelative(rawTarget);
+    return Rect(GetPosition().x, GetPosition().y, GetSize().cx, GetSize().cy)
+        .Contains(rawTarget);
+}
 
 void Base::SetID(
     const wstring id

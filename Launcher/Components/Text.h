@@ -34,6 +34,13 @@ class Text : public Base {
 
     void OnPaint(Gdiplus::Graphics&);
 
+    bool TryHitTest(
+        const Gdiplus::Point
+    ) {
+        // NOTICE: A Text component should not be tried hit test.
+        return false;
+    };
+
     wstring GetContent();
     void    SetContent(const wstring&);
 

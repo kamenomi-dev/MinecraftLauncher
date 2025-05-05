@@ -49,8 +49,7 @@ static Base* TryHitTest(
         }
 
 
-        if (Rect(currComp->GetPosition().x, currComp->GetPosition().y, currComp->GetSize().cx, currComp->GetSize().cy)
-                .Contains(targetPoint)) {
+        if (currComp->TryHitTest(targetPoint)) {
             const auto childComp = TryHitTest(currComp->GetChildFirst(), targetPoint);
 
             return childComp == nullptr ? currComp : childComp;
@@ -81,9 +80,9 @@ static void CallRenderer(
         auto currRect =
             Rect(currComp->GetPosition().x, currComp->GetPosition().y, currComp->GetSize().cx, currComp->GetSize().cy);
 
-       /* if (not invalidatedRect.IsEmptyArea()) {
-            graphics.SetClip(invalidatedRect);
-        }*/
+        /* if (not invalidatedRect.IsEmptyArea()) {
+             graphics.SetClip(invalidatedRect);
+         }*/
 
         const auto status = graphics.Save();
         graphics.TranslateTransform(currRect.X, currRect.Y);
