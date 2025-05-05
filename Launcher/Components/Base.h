@@ -40,7 +40,7 @@ class Base {
     virtual void OnNotify(NotificationInformation<BaseNotificationInformation>&) {};
     virtual void OnDestroy() {};
 
-    bool TryHitTest(const Gdiplus::Point);
+    virtual bool TryHitTest(const Gdiplus::Point);
 
     void    SetID(const wstring);
     wstring GetID() const;
