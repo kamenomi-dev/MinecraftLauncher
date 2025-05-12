@@ -57,7 +57,7 @@ class Text : public Base {
 };
 
 Text* text(
-    wstring ID, POINT position, SIZE size, const wstring& content = L"text",
+    wstring ID, Rect rect, const wstring& content = L"text",
     const TextHorzionalAlignmentStyles = TextHorzionalAlignmentTop,
     const TextVerticalAlignmentStyles  = TextVerticalAlignmentLeft
 );

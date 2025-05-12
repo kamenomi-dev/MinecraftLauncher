@@ -31,10 +31,20 @@ using namespace std::literals;
 using std::make_unique;
 using std::unique_ptr;
 
+using std::make_shared;
+using std::shared_ptr;
+
 using std::initializer_list;
 using std::stack;
 using std::unordered_map;
 using std::vector;
 using std::wstring;
+
+// Extract part of Gdiplus namespace.
+
+// using Gdiplus::Graphics;
+using Gdiplus::Rect;
+using Gdiplus::Size;
+using Gdiplus::Point;
 
 #endif // PCH_H

@@ -16,7 +16,7 @@ void Text::OnPaint(
     SolidBrush brush{Color::Beige};
 
     graphics.DrawString(
-        _textContent.c_str(), _textContent.size(), &contentFont, RectF(0, 0, GetSize().cx, GetSize().cy),
+        _textContent.c_str(), _textContent.size(), &contentFont, RectF(0, 0, GetSize().Width, GetSize().Height),
         &centeredFormat, &brush
     );
 }
@@ -53,13 +53,12 @@ void Text::SetVerticalAligement(
 }
 
 Text* Launcher::Components::text(
-    wstring ID, POINT position, SIZE size, const wstring& content, const TextHorzionalAlignmentStyles hor,
+    wstring ID, Rect rect, const wstring& content, const TextHorzionalAlignmentStyles hor,
     const TextVerticalAlignmentStyles ver
 ) {
     const auto ptr = new Text;
     ptr->SetID(ID);
-    ptr->SetSize(size);
-    ptr->SetPosition(position);
+    ptr->SetRect(rect);
 
     ptr->SetContent(content);
     ptr->SetHorzionalAligement(hor);

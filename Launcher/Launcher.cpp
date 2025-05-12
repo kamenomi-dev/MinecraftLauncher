@@ -17,16 +17,16 @@ int APIENTRY wWinMain(
 ) {
     LauncherWindow main{hInstance};
     main.Push(
-        {Components::button(L"test.button", {200, 200}, {200, 100}, L"I'm a button."),
-         Components::text(L"↖", {0, 0}, {200, 200}, L"↖", TextHorzionalAlignmentTop, TextVerticalAlignmentLeft),
-         Components::text(L"↑", {0, 0}, {200, 200}, L"↑", TextHorzionalAlignmentTop, TextVerticalAlignmentMiddle),
-         Components::text(L"↗", {0, 0}, {200, 200}, L"↗", TextHorzionalAlignmentTop, TextVerticalAlignmentRight),
-         Components::text(L"←", {0, 0}, {200, 200}, L"←", TextHorzionalAlignmentMiddle, TextVerticalAlignmentLeft),
-         Components::text(L"♥", {0, 0}, {200, 200}, L"♥", TextHorzionalAlignmentMiddle, TextVerticalAlignmentMiddle),
-         Components::text(L"→", {0, 0}, {200, 200}, L"→", TextHorzionalAlignmentMiddle, TextVerticalAlignmentRight),
-         Components::text(L"↙", {0, 0}, {200, 200}, L"↙", TextHorzionalAlignmentBottom, TextVerticalAlignmentLeft),
-         Components::text(L"↓", {0, 0}, {200, 200}, L"↓", TextHorzionalAlignmentBottom, TextVerticalAlignmentMiddle),
-         Components::text(L"↘", {0, 0}, {200, 200}, L"↘", TextHorzionalAlignmentBottom, TextVerticalAlignmentRight)}
+        {Components::button(L"test.button", {200, 200, 200, 100}, L"I'm a button."),
+         Components::text(L"↖", {0, 0, 200, 200}, L"↖", TextHorzionalAlignmentTop, TextVerticalAlignmentLeft),
+         Components::text(L"↑", {0, 0, 200, 200}, L"↑", TextHorzionalAlignmentTop, TextVerticalAlignmentMiddle),
+         Components::text(L"↗", {0, 0, 200, 200}, L"↗", TextHorzionalAlignmentTop, TextVerticalAlignmentRight),
+         Components::text(L"←", {0, 0, 200, 200}, L"←", TextHorzionalAlignmentMiddle, TextVerticalAlignmentLeft),
+         Components::text(L"♥", {0, 0, 200, 200}, L"♥", TextHorzionalAlignmentMiddle, TextVerticalAlignmentMiddle),
+         Components::text(L"→", {0, 0, 200, 200}, L"→", TextHorzionalAlignmentMiddle, TextVerticalAlignmentRight),
+         Components::text(L"↙", {0, 0, 200, 200}, L"↙", TextHorzionalAlignmentBottom, TextVerticalAlignmentLeft),
+         Components::text(L"↓", {0, 0, 200, 200}, L"↓", TextHorzionalAlignmentBottom, TextVerticalAlignmentMiddle),
+         Components::text(L"↘", {0, 0, 200, 200}, L"↘", TextHorzionalAlignmentBottom, TextVerticalAlignmentRight)}
     );
 
     main.Initialize();

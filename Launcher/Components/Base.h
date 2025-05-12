@@ -40,29 +40,31 @@ class Base {
     virtual void OnNotify(NotificationInformation<BaseNotificationInformation>&) {};
     virtual void OnDestroy() {};
 
-    virtual bool TryHitTest(const Gdiplus::Point);
+    virtual bool TryHitTest(const Point);
 
     void    SetID(const wstring);
     wstring GetID() const;
     void    SetType(const wstring);
     wstring GetType() const;
-    void    SetSize(const SIZE);
-    SIZE    GetSize() const;
-    void    SetPosition(const POINT);
-    POINT   GetPosition() const;
+    void    SetRect(const Rect);
+    Rect&   GetRect();
+    void    SetSize(const Size);
+    Size    GetSize() const;
+    void    SetPosition(const Point);
+    Point   GetPosition() const;
 
-    Gdiplus::Rect ConvertAbsoluteToRelative(
-        const Gdiplus::Rect absolute
+    Rect ConvertAbsoluteToRelative(
+        const Rect absolute
     ) const {
-        Gdiplus::Rect ret{absolute};
-        ret.Offset(-ComponentPosition.x, -ComponentPosition.y);
+        Rect ret{absolute};
+        ret.Offset(-ComponentPosition.X, -ComponentPosition.Y);
         return ret;
     }
 
-    Gdiplus::Point ConvertAbsoluteToRelative(
-        const Gdiplus::Point absolute
+    Point ConvertAbsoluteToRelative(
+        const Point absolute
     ) const {
-        return absolute - Gdiplus::Point(ComponentPosition.x, ComponentPosition.y);
+        return absolute - Point(ComponentPosition.X, ComponentPosition.Y);
     };
 
     void SetVisible(const bool);
@@ -77,8 +79,8 @@ class Base {
 
     __declspec(property(get = GetID)) wstring                        ComponentID;
     __declspec(property(get = GetType)) wstring                      ComponentType;
-    __declspec(property(get = GetSize, put = SetSize)) SIZE          ComponentSize;
-    __declspec(property(get = GetPosition, put = SetPosition)) POINT ComponentPosition;
+    __declspec(property(get = GetSize, put = SetSize)) Size          ComponentSize;
+    __declspec(property(get = GetPosition, put = SetPosition)) Point ComponentPosition;
 
     __declspec(property(get = GetVisible, put = SetVisible)) bool   Visible;
     __declspec(property(get = GetDisabled, put = SetDisabled)) bool Disabled;
@@ -236,11 +238,10 @@ class Base {
     ComponentNodeStruct _nodeComp{};
     wstring             _idComp{L""};
     wstring             _tyComp{L"Comp.Unknown"};
-    SIZE                _szComp{0};
-    POINT               _posComp{0};
+    Rect                _RectComp{};
 };
 
-Base* base(const wstring ID, SIZE size, POINT position);
+Base* base(const wstring ID, Rect rect);
 
 } // namespace Components
 } // namespace Launcher

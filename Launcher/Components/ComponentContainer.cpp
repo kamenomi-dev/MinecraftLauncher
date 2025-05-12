@@ -77,9 +77,7 @@ static void CallRenderer(
             continue;
         }
 
-        auto currRect =
-            Rect(currComp->GetPosition().x, currComp->GetPosition().y, currComp->GetSize().cx, currComp->GetSize().cy);
-
+        const auto& currRect = currComp->GetRect();
         /* if (not invalidatedRect.IsEmptyArea()) {
              graphics.SetClip(invalidatedRect);
          }*/

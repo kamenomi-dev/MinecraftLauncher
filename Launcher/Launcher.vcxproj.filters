@@ -51,6 +51,9 @@
     <ClInclude Include="Components\Text.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Components\Image.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Launcher.cpp">
@@ -84,6 +87,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Components\Text.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Image.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

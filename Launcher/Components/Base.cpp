@@ -16,10 +16,10 @@ Base::~Base() {
 void Base::Invalidate() {
     // Todo
     RECT rcWnd{NULL};
-    rcWnd.left   = ComponentPosition.x;
-    rcWnd.top    = ComponentPosition.y;
-    rcWnd.right  = ComponentPosition.x + ComponentSize.cx;
-    rcWnd.bottom = ComponentPosition.y + ComponentSize.cy;
+    rcWnd.left   = ComponentPosition.X;
+    rcWnd.top    = ComponentPosition.Y;
+    rcWnd.right  = ComponentPosition.X + ComponentSize.Width;
+    rcWnd.bottom = ComponentPosition.Y + ComponentSize.Height;
 
     if (_nodeComp.root)
         InvalidateRect((HWND)_nodeComp.root->componentContainer->GetWrapper()->GetRenderableHandle(), &rcWnd, 1);
@@ -29,8 +29,7 @@ bool Base::TryHitTest(
     const Gdiplus::Point rawTarget
 ) {
     // auto target = ConvertAbsoluteToRelative(rawTarget);
-    return Rect(GetPosition().x, GetPosition().y, GetSize().cx, GetSize().cy)
-        .Contains(rawTarget);
+    return _RectComp.Contains(rawTarget);
 }
 
 void Base::SetID(
@@ -63,24 +62,42 @@ wstring Base::GetType() const {
     return _tyComp;
 }
 
-void Base::SetSize(
-    const SIZE size
+void Base::SetRect(
+    const Rect rect
 ) {
-    _szComp = size;
+    _RectComp = rect;
 }
 
-SIZE Base::GetSize() const {
-    return _szComp;
+Rect& Base::GetRect() {
+    return _RectComp;
+}
+
+void Base::SetSize(
+    const Size size
+) {
+    _RectComp.Width = size.Width;
+    _RectComp.Height = size.Height;
+}
+
+Size Base::GetSize() const {
+    Size szComp{};
+    _RectComp.GetSize(&szComp);
+
+    return szComp;
 }
 
 void Base::SetPosition(
-    const POINT position
+    const Point position
 ) {
-    _posComp = position;
+    _RectComp.X = position.X;
+    _RectComp.Y = position.Y;
 }
 
-POINT Base::GetPosition() const {
-    return _posComp;
+Point Base::GetPosition() const {
+    Point ptPos{};
+    _RectComp.GetLocation(&ptPos);
+
+    return ptPos;
 }
 
 void Base::SetVisible(
@@ -130,12 +147,11 @@ bool Base::IsLastComponent() const {
 }
 
 Base* Launcher::Components::base(
-    const wstring ID, SIZE size, POINT position
+    const wstring ID, Rect rect
 ) {
     const auto ptr = new Base;
     ptr->SetID(ID);
-    ptr->SetSize(size);
-    ptr->SetPosition(position);
+    ptr->SetRect(rect);
 
     return ptr;
 }
