@@ -10,6 +10,7 @@ constexpr auto NOTIFY_COMPONENT_MOVEOUT = L"Notify.Component.MoveOut";
 
 constexpr auto NOTIFY_COMPONENT_MOUSEUP          = L"Notify.Component.MouseUp";
 constexpr auto NOTIFY_COMPONENT_MOUSEDOWN        = L"Notify.Component.MouseDown";
+constexpr auto NOTIFY_COMPONENT_MOUSEMOVE        = L"Notify.Component.MouseMove";
 constexpr auto NOTIFY_COMPONENT_MOUSECLICK       = L"Notify.Component.MouseClick";
 constexpr auto NOTIFY_COMPONENT_MOUSEDOUBLECLICK = L"Notify.Component.MouseDoubleClick";
 

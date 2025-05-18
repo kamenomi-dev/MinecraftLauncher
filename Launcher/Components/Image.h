@@ -17,9 +17,14 @@ class Image : public Base {
     void SetImage(IStream* stream);
     void SetImage(const WCHAR* file);
 
+    float CalculateFitInsideScale();
+
   public:
     shared_ptr<Gdiplus::Image> _pLoadedImage{};
 };
+
+Image* image(wstring ID, Rect rect, const WCHAR* file);
+
 } // namespace Components
 } // namespace Launcher
 

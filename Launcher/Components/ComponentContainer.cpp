@@ -106,6 +106,10 @@ bool ComponentContainer::SystemMessageProcessor(
     notifyInfo.OriginalData = {hWnd, uMsg, wParam, lParam};
 
     if (uMsg == WM_MOUSEMOVE) {
+
+        notifyInfo.NotifyType = NOTIFY_COMPONENT_MOUSEMOVE;
+        CallAllNotificationReceivers(notifyInfo);
+
         auto currComp = HitTest(lParam);
         if (currComp == _statusInfo.pCurrHoveredComp) {
             return NULL;

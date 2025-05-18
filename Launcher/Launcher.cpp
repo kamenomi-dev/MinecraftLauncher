@@ -6,6 +6,7 @@
 #include "./Components/Window.h"
 #include "./Components/Button.h"
 #include "./Components/Text.h"
+#include "./Components/Image.h" // 2025-05-18: Image added.
 
 #include "Launcher.h"
 
@@ -26,7 +27,8 @@ int APIENTRY wWinMain(
          Components::text(L"→", {0, 0, 200, 200}, L"→", TextHorzionalAlignmentMiddle, TextVerticalAlignmentRight),
          Components::text(L"↙", {0, 0, 200, 200}, L"↙", TextHorzionalAlignmentBottom, TextVerticalAlignmentLeft),
          Components::text(L"↓", {0, 0, 200, 200}, L"↓", TextHorzionalAlignmentBottom, TextVerticalAlignmentMiddle),
-         Components::text(L"↘", {0, 0, 200, 200}, L"↘", TextHorzionalAlignmentBottom, TextVerticalAlignmentRight)}
+         Components::text(L"↘", {0, 0, 200, 200}, L"↘", TextHorzionalAlignmentBottom, TextVerticalAlignmentRight),
+         Components::image(L"comp.image.0", {0, 0, 64, 64}, L"C:\\Users\\Kamen\\Downloads\\IMG_20250502_213015.jpg")}
     );
 
     main.Initialize();
@@ -71,6 +73,10 @@ void LauncherWindow::OnNotify(
 
     if (notify.NotifyType == Components::NOTIFY_COMPONENT_MOUSECLICK) {
         MessageBoxW(notify.OriginalData.hWnd, notify.Emitter->ComponentID.c_str(), L"Clicked", S_OK);
+    }
+
+    if (notify.NotifyType == Components::NOTIFY_COMPONENT_MOUSEMOVE) {
+        
     }
 }
 

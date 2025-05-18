@@ -26,6 +26,11 @@
 #include <unordered_map>
 #include <initializer_list>
 
+// No marco
+
+#undef min
+#undef max
+
 using namespace std::literals;
 
 using std::make_unique;

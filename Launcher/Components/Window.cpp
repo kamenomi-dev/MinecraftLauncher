@@ -8,6 +8,14 @@ using namespace Launcher::Components;
 WindowWrapper::WindowWrapper(
     HINSTANCE hInstance, wstring classText, wstring titleText, WndProc pfnWndProc
 ) {
+    Gdiplus::GdiplusStartupInput input{};
+    if (Gdiplus::GdiplusStartup(&_uGdipToken, &input, nullptr) != Gdiplus::Ok) {
+        OutputDebugStringA("Cannot initialize gdiplus.");
+        abort();
+
+        return;
+    }
+
     ConnectWindow(this);
 
     _wndClass.hInstance   = hInstance;
@@ -37,15 +45,8 @@ WindowWrapper::~WindowWrapper() {
 }
 
 bool WindowWrapper::Initialize() {
-    Gdiplus::GdiplusStartupInput input{};
-    if (Gdiplus::GdiplusStartup(&_uGdipToken, &input, nullptr) != Gdiplus::Ok) {
-        OutputDebugStringA("Cannot initialize gdiplus.");
-        abort();
-        return false;
-    }
 
     _wndClass.lpszClassName = _initOptions.classText.c_str();
-
     if (!RegisterClassEx(&_wndClass)) {
         /*  Gdiplus::GdiplusShutdown(_uGdipToken);
 
