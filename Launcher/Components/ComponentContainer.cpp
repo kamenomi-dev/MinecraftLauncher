@@ -22,11 +22,9 @@ void ComponentContainer::ConnectWindow(
     _pConnectedWindow = wrapper;
 }
 
-void ComponentContainer::RegisterNotificationReceiver(
-    NotificationReceiver* receiver
-) {
-    _notificationReceivers.push_back(receiver);
-}
+// ========================================================
+// // Component Operation .
+// ========================================================
 
 void ComponentContainer::Push(
     initializer_list<Base*> components
@@ -65,6 +63,52 @@ Base* ComponentContainer::HitTest(
     LPARAM combinedPoint
 ) {
     return TryHitTest(GetContainer().get(), {GET_X_LPARAM(combinedPoint), GET_Y_LPARAM(combinedPoint)});
+}
+
+Base* ComponentContainer::TryFindComponent(
+    TryFindComponent_Filter filterFn, const void* filterData
+) {
+    stack<Base*> nodeStack{};
+    nodeStack.push(_pRoot.get());
+
+    while (!nodeStack.empty()) {
+        auto currentNode = nodeStack.top();
+        nodeStack.pop();
+
+        if (filterFn(currentNode, filterData)) return currentNode;
+
+        auto         child = currentNode->GetChildFirst();
+        stack<Base*> tempStack{};
+
+        while (child) {
+            tempStack.push(child);
+            child = (*child).operator++();
+        }
+
+        while (!tempStack.empty()) {
+            nodeStack.push(tempStack.top());
+            tempStack.pop();
+        }
+    }
+}
+
+Base* ComponentContainer::FindComponentByID(
+    const wstring& id
+) {
+    return TryFindComponent(
+        [](Base* comp, const void* pStr) -> bool { return comp->ComponentID == static_cast<const wstring*>(pStr)->c_str(); },
+        &id
+    );
+}
+
+// ========================================================
+// // Event Notification .
+// ========================================================
+
+void ComponentContainer::RegisterNotificationReceiver(
+    NotificationReceiver* receiver
+) {
+    _notificationReceivers.push_back(receiver);
 }
 
 static void CallRenderer(
@@ -107,6 +151,7 @@ bool ComponentContainer::SystemMessageProcessor(
 
     if (uMsg == WM_MOUSEMOVE) {
 
+        notifyInfo.Emitter    = this->GetContainer().get();
         notifyInfo.NotifyType = NOTIFY_COMPONENT_MOUSEMOVE;
         CallAllNotificationReceivers(notifyInfo);
 

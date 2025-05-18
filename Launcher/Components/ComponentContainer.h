@@ -32,6 +32,21 @@ class ComponentContainer {
 
     void ConnectWindow(Interface_BaseWrapper*);
 
+    // ========================================================
+    // // Component Operation .
+    // ========================================================
+
+    typedef bool(__stdcall TryFindComponent_Filter)(Base* currentComponent, const void* filterData);
+
+    void  Push(initializer_list<Base*>);
+    Base* HitTest(LPARAM);
+    Base* TryFindComponent(TryFindComponent_Filter filterFn, const void* filterData);
+    Base* FindComponentByID(const wstring& id);
+
+    // ========================================================
+    // // Notification Operation .
+    // ========================================================
+
     void RegisterNotificationReceiver(NotificationReceiver*);
     template <typename DetailInformation = BaseNotificationInformation>
     void CallAllNotificationReceivers(
@@ -50,35 +65,6 @@ class ComponentContainer {
             pFn(notify);
         }
     };
-
-    void Push(initializer_list<Base*>);
-    /*template <typename P>
-    void ForEach(
-        ForEachFeedback feedback, P& params
-    ) {
-        stack<Base*> nodeStack{};
-        nodeStack.push(_pRoot.get());
-
-        while (!nodeStack.empty()) {
-            auto currentNode = nodeStack.top();
-            nodeStack.pop();
-
-            feedback(currentNode, &params);
-
-            auto         child = currentNode->GetChildFirst();
-            stack<Base*> tempStack{};
-            while (child) {
-                tempStack.push(child);
-                child = (*child).operator++();
-            }
-            while (!tempStack.empty()) {
-                nodeStack.push(tempStack.top());
-                tempStack.pop();
-            }
-        }
-    }*/
-
-    Base* HitTest(LPARAM);
 
     bool SystemMessageProcessor(HWND, UINT, WPARAM, LPARAM, LRESULT&);
     void CallAllComponentRenderer(Gdiplus::Graphics&, Gdiplus::Rect = {});

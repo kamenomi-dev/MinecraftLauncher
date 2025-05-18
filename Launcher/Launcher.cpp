@@ -3,6 +3,7 @@
 #include "Utils.h"
 #include "Render.h"
 
+#include "./Components/Frame.h"
 #include "./Components/Window.h"
 #include "./Components/Button.h"
 #include "./Components/Text.h"
@@ -28,7 +29,7 @@ int APIENTRY wWinMain(
          Components::text(L"↙", {0, 0, 200, 200}, L"↙", TextHorzionalAlignmentBottom, TextVerticalAlignmentLeft),
          Components::text(L"↓", {0, 0, 200, 200}, L"↓", TextHorzionalAlignmentBottom, TextVerticalAlignmentMiddle),
          Components::text(L"↘", {0, 0, 200, 200}, L"↘", TextHorzionalAlignmentBottom, TextVerticalAlignmentRight),
-         Components::image(L"comp.image.0", {0, 0, 64, 64}, L"C:\\Users\\Kamen\\Downloads\\IMG_20250502_213015.jpg")}
+         Components::image(L"comp.image.0", {0, 0, 64, 64}, L"<Input your file path here.>")}
     );
 
     main.Initialize();
@@ -71,12 +72,18 @@ void LauncherWindow::OnNotify(
 ) {
     cos(1);
 
+    static auto image = static_cast<Components::Image*>(
+        static_cast<Frame*>(notify.Emitter)->componentContainer->FindComponentByID(L"comp.image.0")
+    );
+
     if (notify.NotifyType == Components::NOTIFY_COMPONENT_MOUSECLICK) {
         MessageBoxW(notify.OriginalData.hWnd, notify.Emitter->ComponentID.c_str(), L"Clicked", S_OK);
     }
 
     if (notify.NotifyType == Components::NOTIFY_COMPONENT_MOUSEMOVE) {
-        
+        Size mousePt{GET_X_LPARAM(notify.OriginalData.lParam), GET_Y_LPARAM(notify.OriginalData.lParam)};
+
+        image->SetSize(mousePt);
     }
 }
 

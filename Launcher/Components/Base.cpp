@@ -77,6 +77,8 @@ void Base::SetSize(
 ) {
     _RectComp.Width = size.Width;
     _RectComp.Height = size.Height;
+
+    Invalidate();
 }
 
 Size Base::GetSize() const {
