@@ -57,6 +57,12 @@
     <ClInclude Include="UI\Basis.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="UI\Widgets\Base.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Window.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Launcher.cpp">
@@ -96,6 +102,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="UI\Basis.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Widgets\Base.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Window.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

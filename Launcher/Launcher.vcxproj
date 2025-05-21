@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -156,6 +156,8 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="UI\Basis.h" />
+    <ClInclude Include="UI\Widgets\Base.h" />
+    <ClInclude Include="UI\Window.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
@@ -171,6 +173,8 @@
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="UI\Basis.cpp" />
+    <ClCompile Include="UI\Widgets\Base.cpp" />
+    <ClCompile Include="UI\Window.cpp" />
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

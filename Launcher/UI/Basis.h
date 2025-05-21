@@ -19,15 +19,19 @@ class IVisualObject /* abstract */ {
 
     virtual void OnPaint(Gdiplus::Graphics&) = 0;
 
-    virtual void SetID(const wstring)              = 0;
-    virtual void SetType(const wstring)            = 0;
-    virtual void SetSize(const Gdiplus::Size)      = 0;
-    virtual void SetPosition(const Gdiplus::Point) = 0;
+    virtual void SetID(wstring&)             = 0;
+    virtual void SetType(wstring&)           = 0;
+    virtual void SetSize(Gdiplus::Size)      = 0;
+    virtual void SetPosition(Gdiplus::Point) = 0;
+    virtual void SetVisible(bool)            = 0;
+    virtual void SetDisabled(bool)           = 0;
 
     virtual const wstring        GetID()       = 0;
     virtual const wstring        GetType()     = 0;
     virtual const Gdiplus::Size  GetSize()     = 0;
     virtual const Gdiplus::Point GetPosition() = 0;
+    virtual const bool           GetVisible()  = 0;
+    virtual const bool           GetDisabled() = 0;
 
   private:
     StatusFlags _statusFlags{};
