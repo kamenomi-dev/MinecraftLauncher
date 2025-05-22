@@ -63,6 +63,9 @@
     <ClInclude Include="UI\Window.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="UI\UI.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Launcher.cpp">
@@ -108,6 +111,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="UI\Window.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UI.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

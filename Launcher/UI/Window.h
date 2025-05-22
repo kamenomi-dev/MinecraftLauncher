@@ -6,7 +6,32 @@
 
 namespace MinecraftLauncher {
 namespace UI {
-class Window : public IVisualObject {};
+class Window : public IVisualObject_InterfaceOnly {
+  public:
+    virtual void OnPaint(Gdiplus::Graphics&) {};
+
+  protected:
+    Window() : IVisualObject_InterfaceOnly(L"Window") {};
+
+    void Initialize();
+
+    void          SetTitle(wstring);
+    const wstring GetTitle();
+
+    void SetID(wstring);
+    void SetType(wstring);
+    void SetSize(Gdiplus::Size);
+    void SetPosition(Gdiplus::Point);
+    void SetVisible(bool);
+    void SetDisabled(bool);
+
+    const wstring        GetID();
+    const wstring        GetType();
+    const Gdiplus::Size  GetSize();
+    const Gdiplus::Point GetPosition();
+    const bool           GetVisible();
+    const bool           GetDisabled();
+};
 } // namespace UI
 } // namespace MinecraftLauncher
 
