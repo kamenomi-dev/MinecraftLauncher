@@ -11,7 +11,7 @@ class Window : public IVisualObject_InterfaceOnly {
     virtual void OnPaint(Gdiplus::Graphics&) {};
 
   protected:
-    Window() : IVisualObject_InterfaceOnly(L"Window") {};
+    Window() : IVisualObject_InterfaceOnly(L"UI.Widgets.Window") {};
 
     void Initialize();
 
@@ -19,7 +19,6 @@ class Window : public IVisualObject_InterfaceOnly {
     const wstring GetTitle();
 
     void SetID(wstring);
-    void SetType(wstring);
     void SetSize(Gdiplus::Size);
     void SetPosition(Gdiplus::Point);
     void SetVisible(bool);
