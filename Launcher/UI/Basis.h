@@ -69,6 +69,13 @@ class IVisualObject /* abstract */ : public IVisualObject_InterfaceOnly {
   public:
     StatusFlags _statusFlags{};
 };
+
+class INotify {
+  public:
+    virtual bool
+    UIMessageProcessor(_In_ IVisualObject*, _In_ UINT, _In_ WPARAM, _In_ LPARAM, _Inout_ bool needToReturn)         = 0;
+    virtual bool WindowsMessageProcessor(_In_ HWND, _In_ UINT, _In_ WPARAM, _In_ LPARAM, _Inout_ bool needToReturn) = 0;
+};
 } // namespace UI
 } // namespace MinecraftLauncher
 

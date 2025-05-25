@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "./Window.h"
 #include "UI.h"
 
 using namespace MinecraftLauncher;

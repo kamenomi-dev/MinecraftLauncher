@@ -6,14 +6,26 @@
 
 namespace MinecraftLauncher {
 namespace UI {
-class Window : public IVisualObject_InterfaceOnly {
+
+struct WindowProperties {
+    wstring ClassText{L"UI_Window"};
+    wstring TitleText{L"DefaultWindow"};
+    Size    windowSize{800, 600};
+    Point   windowPosition{0, 0};
+};
+
+class Window : public IVisualObject_InterfaceOnly, public INotify {
   public:
     virtual void OnPaint(Gdiplus::Graphics&) {};
+    virtual void Initialize() {};
 
   protected:
     Window() : IVisualObject_InterfaceOnly(L"UI.Widgets.Window") {};
 
-    void Initialize();
+    void BlurWindow();
+    void CenterWindowToScreen();
+
+    LRESULT _Native_WindowsMessageProcessor(_In_ HWND, _In_ UINT, _In_ WPARAM, _In_ LPARAM);
 
     void          SetTitle(wstring);
     const wstring GetTitle();
@@ -25,11 +37,13 @@ class Window : public IVisualObject_InterfaceOnly {
     void SetDisabled(bool);
 
     const wstring        GetID();
-    const wstring        GetType();
     const Gdiplus::Size  GetSize();
     const Gdiplus::Point GetPosition();
     const bool           GetVisible();
     const bool           GetDisabled();
+
+  public:
+    WindowProperties windowProperties{};
 };
 } // namespace UI
 } // namespace MinecraftLauncher
