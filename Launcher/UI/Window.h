@@ -12,6 +12,9 @@ struct WindowProperties {
     wstring TitleText{L"DefaultWindow"};
     Size    windowSize{800, 600};
     Point   windowPosition{0, 0};
+
+    bool    IsBlur{false};
+    bool    IsCenterAlign{true};
 };
 
 class Window : public IVisualObject_InterfaceOnly, public INotify {
@@ -43,7 +46,7 @@ class Window : public IVisualObject_InterfaceOnly, public INotify {
     const bool           GetDisabled();
 
   public:
-    WindowProperties windowProperties{};
+    WindowProperties initialWindowProperties{};
 };
 } // namespace UI
 } // namespace MinecraftLauncher
