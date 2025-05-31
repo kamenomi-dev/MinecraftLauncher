@@ -3,9 +3,67 @@
 
 using namespace MinecraftLauncher::UI;
 
-void Window::Initialize() {
-    const auto& props = initialWindowProperties;
+HWND Window::Initialize(
+    HINSTANCE processInstance, WNDPROC winMsgProc, int nCmdShow
+) {
+    hProcessInstance                 = processInstance;
+    initialWindowProperties.nCmdShow = nCmdShow;
+    auto& props                      = initialWindowProperties;
 
+    WNDCLASSEXW classInfo{};
+    classInfo.cbSize        = sizeof WNDCLASSEXW;
+    classInfo.style         = CS_HREDRAW | CS_VREDRAW;
+    classInfo.hInstance     = processInstance;
+    classInfo.lpfnWndProc   = winMsgProc;
+    classInfo.lpszClassName = props.ClassText.c_str();
+    RegisterClassExW(&classInfo);
+
+    hOwnedWindow = CreateWindowExW(
+        WS_EX_APPWINDOW, props.ClassText.c_str(), props.TitleText.c_str(), WS_OVERLAPPEDWINDOW, props.windowPosition.X,
+        props.windowPosition.Y, props.windowSize.Width, props.windowSize.Height, nullptr, nullptr, processInstance,
+        (void*)this
+    );
+
+    if (hOwnedWindow == nullptr) {
+        OutputDebugStringW(
+            L"Oops, A window couldn't be created. Please check your window doesn't conflict with others. "
+        );
+        abort();
+    }
+
+    return hOwnedWindow;
+}
+
+void Window::Uninitialize() {
+    if (hOwnedWindow == nullptr) {
+        OutputDebugStringW(L"Oops, A Window class couldn't be uninited itself because was not inited before. ");
+        return;
+    }
+
+    const auto& props = initialWindowProperties;
+    UnregisterClassW(props.ClassText.c_str(), hProcessInstance);
+
+    DestroyWindow(hOwnedWindow);
+    hOwnedWindow = nullptr;
+}
+
+LRESULT Window::_Native_WindowsMessageProcessor(
+    HWND hWnd, UINT uMsg, WPARAM wp, LPARAM lp
+) {
+
+    if (uMsg == WM_CREATE) {
+        if (initialWindowProperties.IsCenterAlign) {
+            CenterWindowToScreen();
+        }
+
+        if (initialWindowProperties.IsBlur) {
+            BlurWindow();
+        }
+
+        ShowWindow(hOwnedWindow, initialWindowProperties.nCmdShow);
+    }
+
+    return DefWindowProcW(hWnd, uMsg, wp, lp);
 }
 
 void Window::SetTitle(
@@ -37,10 +95,6 @@ void Window::SetDisabled(
 ) {}
 
 const wstring Window::GetID() {
-    return wstring();
-}
-
-const wstring Window::GetType() {
     return wstring();
 }
 

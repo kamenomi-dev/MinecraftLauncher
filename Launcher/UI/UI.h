@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #ifndef _MinecraftLauncher_UI_UI_H_
 #define _MinecraftLauncher_UI_UI_H_
 
@@ -12,11 +11,13 @@ struct WindowControlBlock {
     WindowControlBlock* PrevWCB{nullptr};
     WindowControlBlock* NextWCB{nullptr};
 
-    bool    isInitialized{false};
+    bool isInitialized{false};
+
+    HWND    windowHandle{nullptr};
     Window* currentWindow{nullptr};
 };
 
-bool Initialize(HINSTANCE hInstance);
+bool Initialize(HINSTANCE hInstance, int nCmdShow = SW_SHOW);
 void Uninitialize();
 bool IsInitializedUI();
 

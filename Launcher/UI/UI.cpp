@@ -6,46 +6,43 @@
 using namespace MinecraftLauncher;
 
 static ULONG_PTR               _gdipToken{NULL};
-static UI::WindowControlBlock* _windowControlBlockFirst{nullptr};
+static UI::WindowControlBlock* _WCB_First{nullptr};
 
 extern HINSTANCE UI::processInstance{};
 
 static LRESULT WindowsMessageProcessor(
     HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 ) {
+    auto currentTargetWindow =;
+
+    if (uMsg == WM_CREATE) {
+        auto wnd = (UI::Window*)(void*)(lParam);
+    }
+
     return DefWindowProcW(hWnd, uMsg, wParam, lParam);
 }
 
-static void InitializeWindowInstance(
-    UI::WindowControlBlock* wcb
+inline static void InitializeWindowInstance(
+    UI::WindowControlBlock* wcb, int nCmdShow
 ) {
     auto window = wcb->currentWindow;
 
-    const auto& classText = window->initialWindowProperties.ClassText;
-    WNDCLASSEXW classInfo{};
-    classInfo.cbSize        = sizeof WNDCLASSEXW;
-    classInfo.style         = CS_HREDRAW | CS_VREDRAW;
-    classInfo.hInstance     = UI::processInstance;
-    classInfo.lpfnWndProc   = WindowsMessageProcessor;
-    classInfo.lpszClassName = classText.c_str();
-
-    RegisterClassExW(&classInfo);
-
-    window->Initialize();
+    auto hWnd          = window->Initialize(UI::processInstance, WindowsMessageProcessor, nCmdShow);
+    wcb->windowHandle  = hWnd;
     wcb->isInitialized = true;
 }
 
 bool UI::Initialize(
-    HINSTANCE hInstance
+    HINSTANCE hInstance, int nCmdShow
 ) {
     Gdiplus::GdiplusStartupInput input{};
     if (Gdiplus::GdiplusStartup(&_gdipToken, &input, nullptr) != Gdiplus::Ok) {
         return false;
     }
 
-    auto wcb = _windowControlBlockFirst;
+    auto wcb = _WCB_First;
     do {
-        InitializeWindowInstance(wcb);
+        InitializeWindowInstance(wcb, nCmdShow);
         wcb = wcb->NextWCB;
     } while (wcb->NextWCB);
 
@@ -53,6 +50,22 @@ bool UI::Initialize(
 }
 
 void UI::Uninitialize() {
+
+    auto currentWcb = _WCB_First;
+    do {
+        const auto next = currentWcb->NextWCB;
+
+        const wstring classText = currentWcb->currentWindow->initialWindowProperties.ClassText;
+
+        currentWcb->isInitialized = false;
+        delete currentWcb->currentWindow;
+
+        UnregisterClassW(classText.c_str(), processInstance);
+
+        delete currentWcb;
+        currentWcb = next;
+    } while (currentWcb);
+
     if (_gdipToken != NULL) {
         Gdiplus::GdiplusShutdown(_gdipToken);
         _gdipToken = NULL;
@@ -69,10 +82,10 @@ void UI::CreateUIWindow(
     auto* wcb          = new WindowControlBlock;
     wcb->currentWindow = window;
 
-    if (_windowControlBlockFirst == nullptr) {
-        _windowControlBlockFirst = wcb;
+    if (_WCB_First == nullptr) {
+        _WCB_First = wcb;
     } else {
-        auto tempWcb = _windowControlBlockFirst;
+        auto tempWcb = _WCB_First;
 
         while (tempWcb->NextWCB) {
             tempWcb = tempWcb->NextWCB;

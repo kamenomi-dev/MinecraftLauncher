@@ -157,6 +157,7 @@
     <ClInclude Include="Render.h" />
     <ClInclude Include="UI\Basis.h" />
     <ClInclude Include="UI\UI.h" />
+    <ClInclude Include="UI\Utils.h" />
     <ClInclude Include="UI\Widgets\Base.h" />
     <ClInclude Include="UI\Window.h" />
     <ClInclude Include="Utils.h" />
@@ -175,6 +176,7 @@
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="UI\Basis.cpp" />
     <ClCompile Include="UI\UI.cpp" />
+    <ClCompile Include="UI\Utils.cpp" />
     <ClCompile Include="UI\Widgets\Base.cpp" />
     <ClCompile Include="UI\Window.cpp" />
     <ClCompile Include="Utils.cpp" />

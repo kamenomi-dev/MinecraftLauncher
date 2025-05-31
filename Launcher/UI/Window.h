@@ -13,17 +13,22 @@ struct WindowProperties {
     Size    windowSize{800, 600};
     Point   windowPosition{0, 0};
 
-    bool    IsBlur{false};
-    bool    IsCenterAlign{true};
+    bool IsBlur{false};
+    bool IsCenterAlign{true};
+
+    // System required
+    int nCmdShow;
 };
 
 class Window : public IVisualObject_InterfaceOnly, public INotify {
   public:
     Window() : IVisualObject_InterfaceOnly(L"UI.Widgets.Window") {};
+    ~Window() { Uninitialize(); };
     virtual void OnPaint(Gdiplus::Graphics&) {};
 
   public:
-    void Initialize();
+    HWND Initialize(HINSTANCE processInstance, WNDPROC winMsgProc, int nCmdShow);
+    void Uninitialize();
 
     void BlurWindow();
     void CenterWindowToScreen();
@@ -47,6 +52,9 @@ class Window : public IVisualObject_InterfaceOnly, public INotify {
 
   public:
     WindowProperties initialWindowProperties{};
+
+    HWND      hOwnedWindow{nullptr};
+    HINSTANCE hProcessInstance{nullptr};
 };
 } // namespace UI
 } // namespace MinecraftLauncher
