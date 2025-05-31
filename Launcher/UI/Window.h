@@ -19,11 +19,11 @@ struct WindowProperties {
 
 class Window : public IVisualObject_InterfaceOnly, public INotify {
   public:
-    virtual void OnPaint(Gdiplus::Graphics&) {};
-    virtual void Initialize() {};
-
-  protected:
     Window() : IVisualObject_InterfaceOnly(L"UI.Widgets.Window") {};
+    virtual void OnPaint(Gdiplus::Graphics&) {};
+
+  public:
+    void Initialize();
 
     void BlurWindow();
     void CenterWindowToScreen();

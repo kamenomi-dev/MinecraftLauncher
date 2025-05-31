@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 #ifndef _MinecraftLauncher_UI_UI_H_
 #define _MinecraftLauncher_UI_UI_H_
 
@@ -7,11 +8,21 @@ namespace UI {
 
 class Window;
 
-bool Initialize();
+struct WindowControlBlock {
+    WindowControlBlock* PrevWCB{nullptr};
+    WindowControlBlock* NextWCB{nullptr};
+
+    bool    isInitialized{false};
+    Window* currentWindow{nullptr};
+};
+
+bool Initialize(HINSTANCE hInstance);
 void Uninitialize();
 bool IsInitializedUI();
 
 void CreateUIWindow(Window*);
+
+extern HINSTANCE processInstance;
 } // namespace UI
 } // namespace MinecraftLauncher
 

@@ -3,7 +3,10 @@
 
 using namespace MinecraftLauncher::UI;
 
-void Window::Initialize() {}
+void Window::Initialize() {
+    const auto& props = initialWindowProperties;
+
+}
 
 void Window::SetTitle(
     wstring
