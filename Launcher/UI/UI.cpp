@@ -1,19 +1,20 @@
 #include "pch.h"
 
 #include "./Window.h"
+#include "Utils.h"
 #include "UI.h"
 
 using namespace MinecraftLauncher;
 
-static ULONG_PTR               _gdipToken{NULL};
-static UI::WindowControlBlock* _WCB_First{nullptr};
+static ULONG_PTR                                           _gdipToken{NULL};
+static UI::Utils::DoublyLinkedNode<UI::WindowControlBlock> _WCB_First{};
 
 extern HINSTANCE UI::processInstance{};
 
 static LRESULT WindowsMessageProcessor(
     HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 ) {
-    auto currentTargetWindow =;
+    auto currentTargetWindow = ;
 
     if (uMsg == WM_CREATE) {
         auto wnd = (UI::Window*)(void*)(lParam);
@@ -23,13 +24,13 @@ static LRESULT WindowsMessageProcessor(
 }
 
 inline static void InitializeWindowInstance(
-    UI::WindowControlBlock* wcb, int nCmdShow
+    UI::Utils::DoublyLinkedNode<UI::WindowControlBlock>* wcb, int nCmdShow
 ) {
-    auto window = wcb->currentWindow;
+    auto window = wcb->Node->currentWindow;
 
-    auto hWnd          = window->Initialize(UI::processInstance, WindowsMessageProcessor, nCmdShow);
-    wcb->windowHandle  = hWnd;
-    wcb->isInitialized = true;
+    auto hWnd                = window->Initialize(UI::processInstance, WindowsMessageProcessor, nCmdShow);
+    wcb->Node->windowHandle  = hWnd;
+    wcb->Node->isInitialized = true;
 }
 
 bool UI::Initialize(
@@ -40,25 +41,25 @@ bool UI::Initialize(
         return false;
     }
 
-    auto wcb = _WCB_First;
-    do {
+    auto wcb = &_WCB_First;
+    while (wcb++) {
         InitializeWindowInstance(wcb, nCmdShow);
-        wcb = wcb->NextWCB;
-    } while (wcb->NextWCB);
+        wcb = wcb++;
+    };
 
     return true;
 }
 
 void UI::Uninitialize() {
 
-    auto currentWcb = _WCB_First;
+    auto currentWcb = &_WCB_First;
     do {
-        const auto next = currentWcb->NextWCB;
+        const auto next = currentWcb++;
 
-        const wstring classText = currentWcb->currentWindow->initialWindowProperties.ClassText;
+        const wstring classText = currentWcb->Node->currentWindow->initialWindowProperties.ClassText;
 
-        currentWcb->isInitialized = false;
-        delete currentWcb->currentWindow;
+        currentWcb->Node->isInitialized = false;
+        delete currentWcb->Node->currentWindow;
 
         UnregisterClassW(classText.c_str(), processInstance);
 
@@ -82,16 +83,16 @@ void UI::CreateUIWindow(
     auto* wcb          = new WindowControlBlock;
     wcb->currentWindow = window;
 
-    if (_WCB_First == nullptr) {
-        _WCB_First = wcb;
+    if (!_WCB_First.Node) {
+        _WCB_First.Node.reset(wcb);
     } else {
-        auto tempWcb = _WCB_First;
+        auto* tempWcb = &_WCB_First;
 
-        while (tempWcb->NextWCB) {
-            tempWcb = tempWcb->NextWCB;
+        while (tempWcb++) {
+            tempWcb = tempWcb++;
         }
 
-        tempWcb->NextWCB = wcb;
-        wcb->PrevWCB     = tempWcb;
+        (*tempWcb)                  += wcb;
+        tempWcb->NextNode->PrevNode  = tempWcb;
     }
 }

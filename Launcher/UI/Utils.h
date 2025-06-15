@@ -9,8 +9,10 @@ namespace Utils {
 template <typename Type>
 class DoublyLinkedNode {
   public:
-    DoublyLinkedNode(Type val) : Node(val) {};
-    DoublyLinkedNode(Type val, DoublyLinkedNode<Type>& prev, DoublyLinkedNode<Type>& next)
+    DoublyLinkedNode() : {};
+    DoublyLinkedNode(Type* val) : Node(val) {};
+    DoublyLinkedNode(Type* val, DoublyLinkedNode<Type>& prev) : Node(val), PrevNode(&prev) {};
+    DoublyLinkedNode(Type* val, DoublyLinkedNode<Type>& prev, DoublyLinkedNode<Type>& next)
     : Node(val),
       PrevNode(&prev),
       NextNode(&next) {};
@@ -27,9 +29,26 @@ class DoublyLinkedNode {
         Node = {};
     }
 
-    DoublyLinkedNode* PrevNode{nullptr};
-    DoublyLinkedNode* NextNode{nullptr};
-    std::shared_ptr<Type>  Node{};
+    auto* operator--() { return PrevNode; }
+    auto* operator++() { return NextNode; }
+
+    void operator-=(
+        Type* val
+    ) {
+        PrevNode = new DoublyLinkedNode{val};
+    }
+    void operator+=(
+        Type* val
+    ) {
+        NextNode = new DoublyLinkedNode{val};
+    }
+
+    DoublyLinkedNode*     PrevNode{nullptr};
+    DoublyLinkedNode*     NextNode{nullptr};
+    std::unique_ptr<Type> Node{};
+
+    DoublyLinkedNode(const DoublyLinkedNode&)            = delete;
+    DoublyLinkedNode& operator=(const DoublyLinkedNode&) = delete;
 };
 } // namespace Utils
 } // namespace UI

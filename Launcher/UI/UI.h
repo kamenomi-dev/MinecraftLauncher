@@ -8,9 +8,6 @@ namespace UI {
 class Window;
 
 struct WindowControlBlock {
-    WindowControlBlock* PrevWCB{nullptr};
-    WindowControlBlock* NextWCB{nullptr};
-
     bool isInitialized{false};
 
     HWND    windowHandle{nullptr};
