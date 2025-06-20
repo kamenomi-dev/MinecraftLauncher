@@ -36,15 +36,15 @@
     <ClInclude Include="Utils\Noncopyable.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Utils\DoublyLinkedNode.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Logger.cpp">
@@ -54,12 +54,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="WindowManager.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Utils\Singleton.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Utils\DoubleBuffer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

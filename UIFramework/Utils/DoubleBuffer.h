@@ -1,7 +1,7 @@
 #pragma once
-
-#ifndef _UIFramework_Utils_DoubleBuffer_H_
-#define _UIFramework_Utils_DoubleBuffer_H_
+#include "pch.h"
+#include "logger.cpp"
+#include "Noncopyable.h"
 
 namespace UIFramework {
 namespace Utils {
@@ -73,5 +73,3 @@ class DoubleBuffer : Noncopyable {
 };
 } // namespace Utils
 } // namespace UIFramework
-
-#endif // !_UIFramework_Utils_DoubleBuffer_H_

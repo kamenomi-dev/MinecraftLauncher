@@ -1,8 +1,4 @@
 #pragma once
-
-#ifndef _UIFramework_Utils_Noncopyable_H_
-#define _UIFramework_Utils_Noncopyable_H_
-
 namespace UIFramework {
 namespace Utils {
 class Noncopyable {
@@ -18,5 +14,3 @@ class Noncopyable {
 };
 } // namespace Utils
 } // namespace UIFramework
-
-#endif // !_UIFramework_Utils_Noncopyable_H_

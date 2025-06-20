@@ -1,8 +1,5 @@
 #pragma once
-
-#ifndef _UIFramework_Utils_DoublyLinkedNode_H_
-#define _UIFramework_Utils_DoublyLinkedNode_H_
-
+#include "pch.h"
 #include "Logger.cpp"
 
 namespace UIFramework {
@@ -53,5 +50,3 @@ class DoublyLinkedNode {
 };
 } // namespace Utils
 } // namespace UIFramework
-
-#endif // !_UIFramework_Utils_DoublyLinkedNode_H_

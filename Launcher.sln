@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TEST_Utils_System_GetCorrec
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UIFramework", "UIFramework\UIFramework.vcxproj", "{A6F52D34-AEA2-42AB-A634-3A4375C03E87}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UIFramework Test", "UIFramework Test\UIFramework Test.vcxproj", "{01BC3CF2-C82E-4D74-8FF9-68CBEA7F47C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +43,14 @@ Global
 		{A6F52D34-AEA2-42AB-A634-3A4375C03E87}.Release|x64.Build.0 = Release|x64
 		{A6F52D34-AEA2-42AB-A634-3A4375C03E87}.Release|x86.ActiveCfg = Release|Win32
 		{A6F52D34-AEA2-42AB-A634-3A4375C03E87}.Release|x86.Build.0 = Release|Win32
+		{01BC3CF2-C82E-4D74-8FF9-68CBEA7F47C3}.Debug|x64.ActiveCfg = Debug|x64
+		{01BC3CF2-C82E-4D74-8FF9-68CBEA7F47C3}.Debug|x64.Build.0 = Debug|x64
+		{01BC3CF2-C82E-4D74-8FF9-68CBEA7F47C3}.Debug|x86.ActiveCfg = Debug|Win32
+		{01BC3CF2-C82E-4D74-8FF9-68CBEA7F47C3}.Debug|x86.Build.0 = Debug|Win32
+		{01BC3CF2-C82E-4D74-8FF9-68CBEA7F47C3}.Release|x64.ActiveCfg = Release|x64
+		{01BC3CF2-C82E-4D74-8FF9-68CBEA7F47C3}.Release|x64.Build.0 = Release|x64
+		{01BC3CF2-C82E-4D74-8FF9-68CBEA7F47C3}.Release|x86.ActiveCfg = Release|Win32
+		{01BC3CF2-C82E-4D74-8FF9-68CBEA7F47C3}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
