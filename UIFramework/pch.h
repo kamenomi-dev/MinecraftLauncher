@@ -18,4 +18,7 @@ using Gdiplus::Rect;
 using Gdiplus::Size;
 using Gdiplus::Point;
 
+#pragma execution_character_set("utf-8")
+#include <spdlog/spdlog.h>
+
 #endif // PCH_H

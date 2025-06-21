@@ -13,8 +13,8 @@ class Window : public Utils::Noncopyable {
         const wstring& = L"I am a Window.", Rect = {0, 0, 800, 600}, UINT = WS_OVERLAPPEDWINDOW, UINT = WS_EX_APPWINDOW
     );
     void Close();
-    void Show();
-    void Hide();
+    void Show() const;
+    void Hide() const;
 
     bool _Native_WindowsMessageProcessor(HWND, UINT, WPARAM, LPARAM, LRESULT&);
 

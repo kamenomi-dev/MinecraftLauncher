@@ -72,22 +72,38 @@ void Window::Close() {
     windowHandle = nullptr;
 }
 
-void Window::Show() {
+void Window::Show() const {
     if (windowHandle) {
         CheckAnyResult(ShowWindow(windowHandle, SW_SHOW));
     }
 }
 
-void Window::Hide() {
+void Window::Hide() const {
     if (windowHandle) {
         CheckAnyResult(ShowWindow(windowHandle, SW_HIDE));
     }
+}
+
+bool Window::_Native_WindowsMessageProcessor(HWND, UINT uMsg, WPARAM, LPARAM, LRESULT &)
+{
+    OutputDebugStringW(
+        (L"From " + std::to_wstring((LONGLONG)this) + L" receive msg: " + std::to_wstring(uMsg) + L"\r\n").c_str()
+    );
+    return false;
 }
 
 LRESULT Window::WindowsMessageProcessor(
     HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 ) {
     auto& currentContext = ui_WindowMap[hWnd];
+
+    if (uMsg == WM_CREATE) {
+        LRESULT noop{};
+        auto    context = (Window*)(void*)lParam;
+        currentContext->_Native_WindowsMessageProcessor(hWnd, uMsg, wParam, lParam, noop);
+
+        return NULL;
+    }
 
     if (uMsg == WM_CLOSE) {
         if (currentContext) {
@@ -106,6 +122,13 @@ LRESULT Window::WindowsMessageProcessor(
                     context->second->Close();
                 }
             }
+        }
+    }
+
+    if (currentContext) {
+        LRESULT result{};
+        if (currentContext->_Native_WindowsMessageProcessor(hWnd, uMsg, wParam, lParam, result)) {
+            return result;
         }
     }
 

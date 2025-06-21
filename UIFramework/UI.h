@@ -1,4 +1,5 @@
 #pragma once
+#include "pch.h"
 #include "Logger.cpp"
 
 static bool InitializeGdiplus(
@@ -24,6 +25,8 @@ static bool InitializeGdiplus(
 
 namespace UIFramework {
 inline void UiInitialize() {
+    spdlog::info("Welcome to spdlog!");
+
     if (!InitializeGdiplus(true)) {
         NotifyError(L"Couldn't initialize Gdiplus library. ");
     }
@@ -43,6 +46,6 @@ inline UINT Startup() {
     }
 
     _Private_UiUninitialize();
-    return systemMessage.wParam;
+    return (UINT)systemMessage.wParam;
 }
 } // namespace UIFramework
