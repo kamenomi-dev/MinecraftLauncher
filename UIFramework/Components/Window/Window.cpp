@@ -1,14 +1,17 @@
 #include "pch.h"
 #include "Window.h"
 
-#include "logger.cpp"
+#include "Logger.cpp"
 
 using namespace UIFramework::Components;
 
 static ATOM                    ui_WndClassAtom{NULL};
 static std::map<HWND, Window*> ui_WindowMap{};
 
-Window::Window() {
+Window::Window() : instanceLogger(nullptr), windowHandle(nullptr), doubleBuffer(nullptr) {
+
+    instanceLogger = spdlog::stdout_logger_st("Window:" + std::to_string(ui_WindowMap.size()));
+
     if (ui_WndClassAtom == NULL) {
         WNDCLASSEXW classInfo{NULL};
         classInfo.cbSize        = sizeof WNDCLASSEXW;
@@ -29,7 +32,7 @@ Window::Window() {
 
 Window::~Window() {
     if (windowHandle) {
-        CheckAnyResult(DestroyWindow(windowHandle));
+        DestroyWindow(windowHandle);
 
         ui_WindowMap.erase(windowHandle);
         windowHandle = nullptr;
@@ -70,6 +73,8 @@ void Window::Close() {
 
     ui_WindowMap.erase(windowHandle);
     windowHandle = nullptr;
+
+    instanceLogger->info("Window closed. ");
 }
 
 void Window::Show() const {
@@ -84,25 +89,34 @@ void Window::Hide() const {
     }
 }
 
-bool Window::_Native_WindowsMessageProcessor(HWND, UINT uMsg, WPARAM, LPARAM, LRESULT &)
+bool Window::_Native_WindowsMessageProcessor(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT &)
 {
-    OutputDebugStringW(
-        (L"From " + std::to_wstring((LONGLONG)this) + L" receive msg: " + std::to_wstring(uMsg) + L"\r\n").c_str()
-    );
+    if (this && instanceLogger) {
+        instanceLogger->debug(
+            L"Received message: {0}, with data: h {1}, w {2}, l {3}", uMsg, (int)hWnd, (int)wParam, (int)lParam
+        );
+    }
+
     return false;
 }
 
 LRESULT Window::WindowsMessageProcessor(
     HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 ) {
-    auto& currentContext = ui_WindowMap[hWnd];
+    Window* currentContext = nullptr;
+    for (auto ctx = ui_WindowMap.begin(); ctx != ui_WindowMap.end(); ++ctx) {
+        if (ctx->first == hWnd) {
+            currentContext = ctx->second;
+            break;
+        }
+    }
 
     if (uMsg == WM_CREATE) {
-        LRESULT noop{};
+        /*LRESULT noop{};
         auto    context = (Window*)(void*)lParam;
-        currentContext->_Native_WindowsMessageProcessor(hWnd, uMsg, wParam, lParam, noop);
+        context->_Native_WindowsMessageProcessor(hWnd, uMsg, wParam, lParam, noop);
 
-        return NULL;
+        return NULL;*/
     }
 
     if (uMsg == WM_CLOSE) {
@@ -112,6 +126,8 @@ LRESULT Window::WindowsMessageProcessor(
 
         if (ui_WindowMap.empty()) {
             PostQuitMessage(0);
+
+            spdlog::info("All windows closed, shutdown...");
         }
     }
 
@@ -125,11 +141,9 @@ LRESULT Window::WindowsMessageProcessor(
         }
     }
 
-    if (currentContext) {
-        LRESULT result{};
-        if (currentContext->_Native_WindowsMessageProcessor(hWnd, uMsg, wParam, lParam, result)) {
-            return result;
-        }
+    LRESULT result{};
+    if (currentContext->_Native_WindowsMessageProcessor(hWnd, uMsg, wParam, lParam, result)) {
+        return result;
     }
 
     return DefWindowProcW(hWnd, uMsg, wParam, lParam);

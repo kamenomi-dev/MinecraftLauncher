@@ -25,11 +25,13 @@ static bool InitializeGdiplus(
 
 namespace UIFramework {
 inline void UiInitialize() {
-    spdlog::info("Welcome to spdlog!");
+    InitializeLogger();
+    spdlog::info("Success to initialize logger. ");
 
     if (!InitializeGdiplus(true)) {
         NotifyError(L"Couldn't initialize Gdiplus library. ");
     }
+    spdlog::info("Success to initialize Gdiplus. ");
 };
 
 inline void _Private_UiUninitialize() {
@@ -46,6 +48,7 @@ inline UINT Startup() {
     }
 
     _Private_UiUninitialize();
+    spdlog::info("Exited. ");
     return (UINT)systemMessage.wParam;
 }
 } // namespace UIFramework

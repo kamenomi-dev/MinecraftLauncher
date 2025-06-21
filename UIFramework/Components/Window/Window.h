@@ -21,8 +21,10 @@ class Window : public Utils::Noncopyable {
     static LRESULT WindowsMessageProcessor(HWND, UINT, WPARAM, LPARAM);
 
   private:
-    HWND                                 windowHandle{nullptr};
-    std::unique_ptr<Utils::DoubleBuffer> doubleBuffer{nullptr};
+    std::shared_ptr<spdlog::logger> instanceLogger{nullptr};
+
+    HWND                                 windowHandle;
+    std::unique_ptr<Utils::DoubleBuffer> doubleBuffer;
 };
 } // namespace Components
 } // namespace UIFramework

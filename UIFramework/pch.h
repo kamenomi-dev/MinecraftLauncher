@@ -13,12 +13,16 @@
 #include <string>
 #include <memory>
 
+#define FMT_UNICODE 0
+#define SPDLOG_NO_EXCEPTIONS
+#define SPDLOG_WCHAR_TO_UTF8_SUPPORT
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_sinks.h>
+
+using std::string;
 using std::wstring;
 using Gdiplus::Rect;
 using Gdiplus::Size;
 using Gdiplus::Point;
-
-#pragma execution_character_set("utf-8")
-#include <spdlog/spdlog.h>
 
 #endif // PCH_H
