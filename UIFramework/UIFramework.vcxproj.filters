@@ -39,6 +39,15 @@
     <ClInclude Include="UI.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Components\Container.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Window\Base.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\Base.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -54,6 +63,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="WindowManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Base.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Components\Container.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

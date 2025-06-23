@@ -48,7 +48,10 @@ inline UINT Startup() {
     }
 
     _Private_UiUninitialize();
+    
     spdlog::info("Exited. ");
+    UninitializeLogger();
+
     return (UINT)systemMessage.wParam;
 }
 } // namespace UIFramework

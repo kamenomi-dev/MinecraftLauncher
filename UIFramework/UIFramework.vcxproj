@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -154,6 +154,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Components\Base.h" />
+    <ClInclude Include="Components\Container.h" />
+    <ClInclude Include="Components\Window\Base.h" />
     <ClInclude Include="Components\Window\Window.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="UI.h" />
@@ -164,6 +167,8 @@
     <ClInclude Include="WindowManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Components\Base.cpp" />
+    <ClCompile Include="Components\Container.cpp" />
     <ClCompile Include="Components\Window\Window.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Logger.cpp" />

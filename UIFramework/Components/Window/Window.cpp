@@ -10,7 +10,10 @@ static std::map<HWND, Window*> ui_WindowMap{};
 
 Window::Window() : instanceLogger(nullptr), windowHandle(nullptr), doubleBuffer(nullptr) {
 
-    instanceLogger = spdlog::stdout_logger_st("Window:" + std::to_string(ui_WindowMap.size()));
+    instanceLogger = spdlog::stdout_color_mt("Window:" + std::to_string(ui_WindowMap.size()));
+#ifdef _DEBUG
+    instanceLogger->set_level(spdlog::level::trace);
+#endif
 
     if (ui_WndClassAtom == NULL) {
         WNDCLASSEXW classInfo{NULL};

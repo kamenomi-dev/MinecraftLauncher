@@ -9,8 +9,14 @@ static void _Private_ErrorHandler(
 }
 
 static void InitializeLogger() {
+    static auto logger = spdlog::stdout_color_mt("UIFramework");
+    spdlog::set_default_logger(logger);
     spdlog::set_error_handler(_Private_ErrorHandler);
 };
+
+static void UninitializeLogger() {
+    spdlog::shutdown();
+}
 
 static inline void NotifyError(
     const wstring content
