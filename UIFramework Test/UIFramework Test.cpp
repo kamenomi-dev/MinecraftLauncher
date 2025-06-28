@@ -5,11 +5,24 @@
 
 #include "../UIFramework/UI.h"
 #include "../UIFramework/Components/Window/Window.h"
+#include "../UIFramework/Components/Base.h"
 
 int main() {
     std::cout << "Hello World!\n";
 
     UIFramework::UiInitialize();
+
+    auto a = new UIFramework::Components::Component;
+    auto b = new UIFramework::Components::Component;
+    auto c = new UIFramework::Components::Component;
+    a->Emplace(new UIFramework::Components::Component);
+    a->Emplace(new UIFramework::Components::Component);
+    a->Emplace(new UIFramework::Components::Component);
+    a->Emplace(new UIFramework::Components::Component);
+    a->Emplace(b, 0);
+    a->Emplace(c, 0);
+    c->Parentify(b);
+    abort();
 
     UIFramework::Components::Window app{};
     app.Initialize();
