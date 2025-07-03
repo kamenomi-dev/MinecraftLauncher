@@ -24,7 +24,7 @@
     <ClInclude Include="WindowManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Components\Window\Window.h">
+    <ClInclude Include="Components\Window.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Utils\Singleton.h">
@@ -59,7 +59,7 @@
     <ClCompile Include="Logger.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Components\Window\Window.cpp">
+    <ClCompile Include="Components\Window.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="WindowManager.cpp">

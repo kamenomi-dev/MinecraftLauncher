@@ -157,7 +157,7 @@
     <ClInclude Include="Components\Base.h" />
     <ClInclude Include="Components\Container.h" />
     <ClInclude Include="Components\Window\Base.h" />
-    <ClInclude Include="Components\Window\Window.h" />
+    <ClInclude Include="Components\Window.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="Utils\DoubleBuffer.h" />
@@ -169,7 +169,7 @@
   <ItemGroup>
     <ClCompile Include="Components\Base.cpp" />
     <ClCompile Include="Components\Container.cpp" />
-    <ClCompile Include="Components\Window\Window.cpp" />
+    <ClCompile Include="Components\Window.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="pch.cpp">

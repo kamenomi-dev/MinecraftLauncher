@@ -16,12 +16,25 @@ class Component : public Utils::Noncopyable {
     };
 
   public:
+    ~Component() { DestroyTree(); };
+
+    void DestroyTree() {
+        auto currentComp = GetChildFirst();
+        while (currentComp) {
+            auto targetComp = currentComp;
+            currentComp     = currentComp->GetNext();
+
+            delete targetComp;
+        }
+    };
+
     void SeparateAll() {
         // Separate from root
         GetRootRef() = nullptr;
 
         SeparateNearRelation();
     }
+
     void SeparateNearRelation() {
         // Separate from parent
         if (auto& parent = GetParentRef()) {
@@ -122,6 +135,9 @@ class Component : public Utils::Noncopyable {
     Component*& GetChildFirstRef() { return _nodeStruct._childFirst; };
     Component*& GetNextRef() { return _nodeStruct._next; };
     Component*& GetPreviousRef() { return _nodeStruct._previous; };
+
+  public:
+    bool IsRoot = {false};
 
   private:
     CompoentNodeStructure _nodeStruct{nullptr};

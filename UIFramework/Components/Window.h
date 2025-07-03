@@ -2,9 +2,11 @@
 #include <Utils/Noncopyable.h>
 #include <Utils/DoubleBuffer.h>
 
+#include <Components/Container.h>
+
 namespace UIFramework {
 namespace Components {
-class Window : public Utils::Noncopyable {
+class Window : public Container {
   public:
     Window();
     ~Window();
