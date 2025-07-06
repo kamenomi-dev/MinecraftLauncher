@@ -8,17 +8,33 @@ namespace Utils {
 class DoubleBuffer : Noncopyable {
   public:
     DoubleBuffer() = default;
-    ~DoubleBuffer() {};
+    ~DoubleBuffer() {
+        if (memoryBitmap) {
+            SelectBitmap(memoryDeviceContext, memoryPrevBitmap);
+            DeleteBitmap(memoryBitmap);
+            DeleteDC(memoryDeviceContext);
+        }
+
+        if (windowDeviceContext) {
+            ReleaseDC(window, windowDeviceContext);
+        }
+
+        memoryDeviceContext = nullptr;
+        memoryBitmap = memoryPrevBitmap = nullptr;
+
+        window              = nullptr;
+        windowDeviceContext = nullptr;
+    };
 
     void BindWindow(
         HWND hWnd
     ) {
-        window        = hWnd;
-        deviceContext = GetDC(hWnd);
+        window              = hWnd;
+        windowDeviceContext = GetDC(hWnd);
 
         _isLayered = (GetWindowLongW(hWnd, GWL_EXSTYLE) & WS_EX_LAYERED);
 
-        bufferedDeviceContext = CreateCompatibleDC(deviceContext);
+        memoryDeviceContext = CreateCompatibleDC(windowDeviceContext);
         UpdateSize();
     }
 
@@ -35,38 +51,53 @@ class DoubleBuffer : Noncopyable {
         windowSize.cx = rect.right - rect.left;
         windowSize.cy = rect.bottom - rect.top;
 
-        if (bufferedBitmap) {
-            DeleteBitmap(bufferedBitmap);
-            bufferedBitmap = nullptr;
+        if (memoryBitmap) {
+            DeleteBitmap(memoryBitmap);
+            memoryBitmap = nullptr;
         }
 
-        bufferedBitmap = CreateCompatibleBitmap(bufferedDeviceContext, windowSize.cx, windowSize.cy);
-        if (!bufferedBitmap) {
+        memoryBitmap = CreateCompatibleBitmap(memoryDeviceContext, windowSize.cx, windowSize.cy);
+        if (!memoryBitmap) {
             NotifyError(L"Failed to create buffered bitmap. ");
             return;
         }
 
-        if (lastBufferedBitmap) {
-            SelectBitmap(bufferedDeviceContext, bufferedBitmap);
+        if (memoryPrevBitmap) {
+            SelectBitmap(memoryDeviceContext, memoryBitmap);
             return;
         }
 
-        lastBufferedBitmap = SelectBitmap(bufferedDeviceContext, bufferedBitmap);
+        memoryPrevBitmap = SelectBitmap(memoryDeviceContext, memoryBitmap);
     };
 
     void RefreshLayout() const {
         if (!_isLayered) {
-            BitBlt(deviceContext, 0, 0, windowSize.cx, windowSize.cy, bufferedDeviceContext, 0, 0, SRCCOPY);
+            BitBlt(windowDeviceContext, 0, 0, windowSize.cx, windowSize.cy, memoryDeviceContext, 0, 0, SRCCOPY);
         }
     };
+    void RefreshLayout(
+        RECT rcPaint
+    ) const {
+        if (!_isLayered) {
+            BitBlt(
+                windowDeviceContext, rcPaint.left, rcPaint.top, rcPaint.bottom - rcPaint.top,
+                rcPaint.right - rcPaint.left, memoryDeviceContext, 0, 0, SRCCOPY
+            );
+        }
+    };
+    void RefreshLayoutToMemory(
+        HDC hDC
+    ) {
+        BitBlt(memoryDeviceContext, 0, 0, windowSize.cx, windowSize.cy, hDC, 0, 0, SRCCOPY);
+    }
 
     HWND window{nullptr};
     SIZE windowSize{};
-    HDC  deviceContext{nullptr};
+    HDC  windowDeviceContext{nullptr};
 
-    HBITMAP bufferedBitmap{nullptr};
-    HBITMAP lastBufferedBitmap{nullptr};
-    HDC     bufferedDeviceContext{nullptr};
+    HBITMAP memoryBitmap{nullptr};
+    HBITMAP memoryPrevBitmap{nullptr};
+    HDC     memoryDeviceContext{nullptr};
 
   private:
     bool _isLayered;

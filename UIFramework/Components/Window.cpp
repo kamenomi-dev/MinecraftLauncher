@@ -8,7 +8,7 @@ using namespace UIFramework::Components;
 static ATOM                    ui_WndClassAtom{NULL};
 static std::map<HWND, Window*> ui_WindowMap{};
 
-Window::Window() : instanceLogger(nullptr), windowHandle(nullptr), doubleBuffer(nullptr) {
+Window::Window() : instanceLogger(nullptr), windowHandle(nullptr), doubleBuffer(new Utils::DoubleBuffer) {
 
     instanceLogger = spdlog::stdout_color_mt("Window:" + std::to_string(ui_WindowMap.size()));
 #ifdef _DEBUG
@@ -65,8 +65,8 @@ void Window::Initialize(
         NotifyError(L"Error! Failed to create window! ");
     }
 
-    windowHandle       = hWnd;
-    ui_WindowMap[hWnd] = this;
+    windowHandle = hWnd;
+    doubleBuffer->BindWindow(hWnd);
 }
 
 void Window::Close() {
@@ -94,10 +94,24 @@ void Window::Hide() const {
 
 bool Window::_Native_WindowsMessageProcessor(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT &)
 {
-    if (this && instanceLogger) {
+    if (instanceLogger) {
         instanceLogger->debug(
             L"Received message: {0}, with data: h {1}, w {2}, l {3}", uMsg, (int)hWnd, (int)wParam, (int)lParam
         );
+    }
+
+    switch (uMsg) {
+    [[unlikely]] case WM_PAINT: {
+        PAINTSTRUCT paintStruct{};
+        const auto  hTargetDC = BeginPaint(hWnd, &paintStruct);
+        const auto  srcDC     = _ContainerComponent.RenderContainer();
+
+        doubleBuffer->RefreshLayoutToMemory(srcDC);
+        doubleBuffer->RefreshLayout(paintStruct.rcPaint);
+
+        EndPaint(hWnd, &paintStruct);
+        break;
+    }
     }
 
     return false;
@@ -107,47 +121,48 @@ LRESULT Window::WindowsMessageProcessor(
     HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 ) {
     Window* currentContext = nullptr;
-    for (auto ctx = ui_WindowMap.begin(); ctx != ui_WindowMap.end(); ++ctx) {
-        if (ctx->first == hWnd) {
-            currentContext = ctx->second;
-            break;
+
+    auto iter = ui_WindowMap.find(hWnd);
+    if (iter != ui_WindowMap.end()) {
+        currentContext = iter->second;
+    }
+
+    switch (uMsg) {
+    [[unlikely]] case WM_CREATE: {
+        if (!currentContext) {
+            currentContext = (Window*)((CREATESTRUCT*)lParam)->lpCreateParams;
+            ui_WindowMap.emplace(hWnd, currentContext);
         }
+        break;
     }
-
-    if (uMsg == WM_CREATE) {
-        /*LRESULT noop{};
-        auto    context = (Window*)(void*)lParam;
-        context->_Native_WindowsMessageProcessor(hWnd, uMsg, wParam, lParam, noop);
-
-        return NULL;*/
-    }
-
-    if (uMsg == WM_CLOSE) {
+    [[unlikely]] case WM_CLOSE: {
         if (currentContext) {
             currentContext->Close();
         }
 
         if (ui_WindowMap.empty()) {
             PostQuitMessage(0);
-
             spdlog::info("All windows closed, shutdown...");
         }
+        break;
     }
-
-    if (uMsg == WM_QUIT) {
-        if (!ui_WindowMap.empty()) {
-            for (auto context = ui_WindowMap.begin(); context != ui_WindowMap.end(); ++context) {
-                if (context->second) {
-                    context->second->Close();
-                }
-            }
+    [[unlikely]] case WM_QUIT: {
+        for (auto& context : ui_WindowMap) {
+            context.second->Close();
         }
+        break;
+    }
+    case WM_ERASEBKGND: {
+        break;
+    }
+    default:
+        LRESULT result{};
+        if (currentContext && currentContext->_Native_WindowsMessageProcessor(hWnd, uMsg, wParam, lParam, result)) {
+            return result;
+        }
+
+        return DefWindowProcW(hWnd, uMsg, wParam, lParam);
     }
 
-    LRESULT result{};
-    if (currentContext->_Native_WindowsMessageProcessor(hWnd, uMsg, wParam, lParam, result)) {
-        return result;
-    }
-
-    return DefWindowProcW(hWnd, uMsg, wParam, lParam);
+    return NULL;
 }

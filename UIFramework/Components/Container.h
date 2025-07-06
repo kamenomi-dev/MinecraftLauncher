@@ -7,14 +7,23 @@ namespace Components {
 
 class ContainerComponent : public Component {
   public:
-    bool IsRoot = true;
+    ContainerComponent();
+    ~ContainerComponent();
+
+    void Render(Gdiplus::Graphics& graphics) {};
+    HDC  RenderContainer();
+
+  protected:
+    HDC     containerDC{nullptr};
+    HBITMAP containerBitmap{nullptr};
+    HBITMAP containerPrevBitmap{nullptr};
 };
 
 class Container : public Utils::Noncopyable {
   public:
     void Insert(Component*);
 
-  private:
+  protected:
     ContainerComponent _ContainerComponent{};
 };
 } // namespace Components

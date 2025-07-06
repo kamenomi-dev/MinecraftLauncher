@@ -1,11 +1,23 @@
 #pragma once
 #include <Utils/Noncopyable.h>
 
+//  https://www.cnblogs.com/FBsharl/p/17946272
+//  This macro maybe will be changed since in the future. - 2025.07.06 Kamenomi commented.
+#define COMPONENT_PROPERTY(getter, setter) __declspec(property(get = getter, put = setter))
+#define COMPONENT_PROPERTY_GETTER(getter)  __declspec(property(get = getter))
+#define COMPONENT_PROPERTY_SETTER(setter)  __declspec(property(put = setter))
+
 namespace UIFramework {
 namespace Components {
 class Container;
 
 class Component : public Utils::Noncopyable {
+
+    struct ComponentDataStructure {
+        Rect    rect{0, 0, 16, 16};
+        wstring compType{L"Unknown"};
+        bool    containable{false};
+    };
 
     struct CompoentNodeStructure {
         Component* _root       = nullptr;
@@ -18,6 +30,29 @@ class Component : public Utils::Noncopyable {
   public:
     ~Component() { DestroyTree(); };
 
+  public:
+    virtual void Render(Gdiplus::Graphics& graphics) {};
+
+    // ---------- Properties Operation ----------
+
+    COMPONENT_PROPERTY_GETTER(IsContainable) bool Containable;
+    COMPONENT_PROPERTY_GETTER(GetComponentType) const wstring& ComponentType;
+    COMPONENT_PROPERTY(GetComponentRect, SetComponentRect) Rect ComponentRect;
+
+    bool           IsContainable() const { return _ComponentData.containable; }
+    const wstring& GetComponentType() const { return _ComponentData.compType; };
+    Rect&          GetComponentRect() { return _ComponentData.rect; }
+    void           SetComponentRect(
+                  Rect& rect
+              ) {
+        _ComponentData.rect = rect;
+    }
+
+  protected:
+    ComponentDataStructure _ComponentData{};
+
+    // ---------- Node Operation ----------
+  public:
     void DestroyTree() {
         auto currentComp = GetChildFirst();
         while (currentComp) {
@@ -136,10 +171,7 @@ class Component : public Utils::Noncopyable {
     Component*& GetNextRef() { return _nodeStruct._next; };
     Component*& GetPreviousRef() { return _nodeStruct._previous; };
 
-  public:
-    bool IsRoot = {false};
-
-  private:
+  protected:
     CompoentNodeStructure _nodeStruct{nullptr};
 };
 } // namespace Components
